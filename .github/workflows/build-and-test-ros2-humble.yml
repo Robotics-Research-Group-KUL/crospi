@@ -29,11 +29,12 @@ jobs:
 
       - name: Install dependencies (pip, rosdep, luarocks, boost, etc)
         run: |
-          apt-get update
-          apt-get install -y software-properties-common
-          add-apt-repository universe
-          apt-get update
-          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev git curl
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository universe
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev git curl
 
           rosdep update
 
