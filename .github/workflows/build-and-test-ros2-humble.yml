@@ -1,0 +1,45 @@
+name: Humble Build and Test
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 5 * * 1"
+
+jobs:
+  build_and_test_ros2_humble:
+    runs-on: ubuntu-latest
+    container:
+      image: ros:humble
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Boost 1.89.0
+        run: |
+          apt-get install -y pip python3-rosdep luarocks
+          rosdep init
+          rosdep update
+          sudo luarocks install dkjson
+          sudo luarocks install jsonschema
+
+
+          mkdir -p ~/Downloads
+          cd ~/Downloads
+
+          wget -O boost_1_89_0.tar.gz 'https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download'
+
+          tar -xvzf boost_1_89_0.tar.gz
+          cd boost_1_89_0/
+          BOOST_INSTALL_DIR="$HOME/.local/lib/boost/1.89.0"
+          mkdir -p "$BOOST_INSTALL_DIR"
+          ./bootstrap.sh --prefix="$BOOST_INSTALL_DIR"
+          ./b2 -j$(nproc) install
+          
+
+      - name: Build and Test
+        uses: ros-tooling/action-ros-ci@v0.4
+        with:
+          package-name: crospi_core crospi_interfaces 
+          target-ros2-distro: humble
+          coverage-result: false
