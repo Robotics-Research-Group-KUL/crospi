@@ -25,7 +25,6 @@ jobs:
 
           apt-get install -y python3-pip python3-rosdep luarocks wget build-essential
 
-          rosdep init
           rosdep update
           luarocks install dkjson
           luarocks install jsonschema
