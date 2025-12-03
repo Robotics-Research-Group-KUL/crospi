@@ -11,38 +11,47 @@ on:
 jobs:
   build_and_test_ros2_humble:
     runs-on: ubuntu-latest
-    container:
-      image: ros:humble
     steps:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Install dependencies (pip, rosdep, luarocks, boost)
+      - name: Cache Boost
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/lib/boost/1.89.0
+          key: boost-1.89.0-${{ runner.os }}
+
+      - name: Configure GitHub token for HTTPS cloning
+        run: |
+          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+      - name: Install dependencies (pip, rosdep, luarocks, boost, etc)
         run: |
           apt-get update
           apt-get install -y software-properties-common
-
           add-apt-repository universe
           apt-get update
+          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev git curl
 
-          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev
+          rosdep update
 
+          # Lua dependencies
           luarocks install dkjson
           luarocks install jsonschema
 
-          mkdir -p ~/Downloads
-          cd ~/Downloads
-
-          wget -O boost_1_89_0.tar.gz 'https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download'
-
-          tar -xvzf boost_1_89_0.tar.gz
-          cd boost_1_89_0/
-          BOOST_INSTALL_DIR="$HOME/.local/lib/boost/1.89.0"
-          mkdir -p "$BOOST_INSTALL_DIR"
-          ./bootstrap.sh --prefix="$BOOST_INSTALL_DIR"
-          ./b2 -j$(nproc) install
+          # Install Boost 1.89 if not cached
+          if [ ! -d "$HOME/.local/lib/boost/1.89.0/include/boost" ]; then
+            mkdir -p ~/Downloads && cd ~/Downloads
+            wget -O boost_1_89_0.tar.gz 'https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download'
+            tar -xvzf boost_1_89_0.tar.gz
+            cd boost_1_89_0/
+            BOOST_INSTALL_DIR="$HOME/.local/lib/boost/1.89.0"
+            mkdir -p "$BOOST_INSTALL_DIR"
+            ./bootstrap.sh --prefix="$BOOST_INSTALL_DIR"
+            ./b2 -j"$(nproc)" install
+          fi
           
 
       - name: Build and Test
