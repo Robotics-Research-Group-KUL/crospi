@@ -6,10 +6,13 @@
 	url = https://github.com/Robotics-Research-Group-KUL/crospi_application_template.git
 [submodule "crospi_default_plugins"]
 	path = crospi_default_plugins
-	url = https://github.com/Robotics-Research-Group-KUL/crospi_default_plugins
+	url = https://github.com/Robotics-Research-Group-KUL/crospi_default_plugins.git
 [submodule "crospi_interfaces"]
 	path = crospi_interfaces
 	url = https://github.com/Robotics-Research-Group-KUL/crospi_interfaces.git
 [submodule "robot_drivers_crospi/template_driver_crospi"]
 	path = robot_drivers_crospi/template_driver_crospi
 	url = https://github.com/Robotics-Research-Group-KUL/template_driver_crospi.git
+[submodule "etasl_wrapper"]
+	path = etasl_wrapper
+	url = https://github.com/Robotics-Research-Group-KUL/etasl_wrapper.git
