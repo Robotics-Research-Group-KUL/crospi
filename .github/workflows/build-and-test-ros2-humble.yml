@@ -37,8 +37,8 @@ jobs:
           sudo apt-get install -y python3-pip luarocks wget build-essential libpcre3-dev git curl
 
           # Lua dependencies
-          luarocks install dkjson
-          luarocks install jsonschema
+          sudo luarocks install dkjson
+          sudo luarocks install jsonschema
 
           # Install Boost 1.89 if not cached
           if [ ! -d "$HOME/.local/lib/boost/1.89.0/include/boost" ]; then
