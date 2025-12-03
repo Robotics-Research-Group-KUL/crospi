@@ -15,13 +15,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Boost 1.89.0
+      - name: Install dependencies (pip, rosdep, luarocks, boost)
         run: |
-          apt-get install -y pip python3-rosdep luarocks
+          apt-get update
+          apt-get install -y software-properties-common
+
+          add-apt-repository universe
+          apt-get update
+
+          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential
+
           rosdep init
           rosdep update
-          sudo luarocks install dkjson
-          sudo luarocks install jsonschema
+          luarocks install dkjson
+          luarocks install jsonschema
 
 
           mkdir -p ~/Downloads
