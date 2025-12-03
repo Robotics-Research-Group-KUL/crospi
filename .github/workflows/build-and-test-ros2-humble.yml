@@ -14,8 +14,10 @@ jobs:
     container:
       image: ros:humble
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with submodules
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install dependencies (pip, rosdep, luarocks, boost)
         run: |
@@ -49,3 +51,4 @@ jobs:
           package-name: etasl_wrapper crospi_core crospi_interfaces 
           target-ros2-distro: humble
           coverage-result: false
+          skip-vcs-import: true
