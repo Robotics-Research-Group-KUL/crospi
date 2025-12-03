@@ -34,9 +34,7 @@ jobs:
           sudo apt-get install -y software-properties-common
           sudo add-apt-repository universe
           sudo apt-get update
-          sudo apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev git curl
-
-          rosdep update
+          sudo apt-get install -y python3-pip luarocks wget build-essential libpcre3-dev git curl
 
           # Lua dependencies
           luarocks install dkjson
