@@ -23,7 +23,7 @@ jobs:
           add-apt-repository universe
           apt-get update
 
-          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential
+          apt-get install -y python3-pip python3-rosdep luarocks wget build-essential libpcre3-dev
 
           rosdep update
           luarocks install dkjson
