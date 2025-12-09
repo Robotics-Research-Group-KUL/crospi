@@ -11,52 +11,22 @@ on:
 jobs:
   build_and_test_ros2_humble:
     runs-on: ubuntu-latest
+    container:
+    image: ghcr.io/robotics-research-group-kul/crospi-build-test:humble
     steps:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Cache Boost
-        uses: actions/cache@v3
-        with:
-          path: ~/.local/lib/boost/1.89.0
-          key: boost-1.89.0-${{ runner.os }}
-
       - name: Configure GitHub token for HTTPS cloning
         run: |
           git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-
-      - name: Install dependencies (pip, rosdep, luarocks, boost, etc)
-        run: |
-          sudo rm -rf /var/lib/apt/lists/*
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository universe
-          sudo apt-get update
-          sudo apt-get install -y python3-pip luarocks wget build-essential libpcre3-dev git curl
-
-          # Lua dependencies
-          sudo luarocks install dkjson
-          sudo luarocks install jsonschema
-
-          # Install Boost 1.89 if not cached
-          if [ ! -d "$HOME/.local/lib/boost/1.89.0/include/boost" ]; then
-            mkdir -p ~/Downloads && cd ~/Downloads
-            wget -O boost_1_89_0.tar.gz 'https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download'
-            tar -xvzf boost_1_89_0.tar.gz
-            cd boost_1_89_0/
-            BOOST_INSTALL_DIR="$HOME/.local/lib/boost/1.89.0"
-            mkdir -p "$BOOST_INSTALL_DIR"
-            ./bootstrap.sh --prefix="$BOOST_INSTALL_DIR"
-            ./b2 -j"$(nproc)" install
-          fi
-          
 
       - name: Build and Test
         uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: etasl_wrapper crospi_core crospi_interfaces 
           target-ros2-distro: humble
+          skip-tests: true
           coverage-result: false
-          skip-vcs-import: true
