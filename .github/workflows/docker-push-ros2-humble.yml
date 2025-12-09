@@ -22,9 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set lowercase repo owner
-        run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -42,5 +39,5 @@ jobs:
           file: .docker/build_test/humble/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/crospi-build-test:humble
-            ghcr.io/${{ env.OWNER_LC }}/crospi-build-test:humble-${{ github.sha }}
+            ghcr.io/${{ github.repository_owner.toLowerCase() }}/crospi-build-test:humble
+            ghcr.io/${{ github.repository_owner.toLowerCase() }}/crospi-build-test:humble-${{ github.sha }}
