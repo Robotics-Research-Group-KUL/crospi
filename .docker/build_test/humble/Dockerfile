@@ -1,4 +1,4 @@
-FROM osrf/ros:humble-ros-base
+FROM ros:humble
 
 ENV DEBIAN_FRONTEND=noninteractive
 
