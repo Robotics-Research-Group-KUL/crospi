@@ -1,4 +1,4 @@
-<a href="https://aiprism.eu/"><img src="./logo.png" alt="AI-PRISM Logo" width="1024" /></a>
+<a href="https://aiprism.eu/"><img src="./logo.png" alt="AI-PRISM Logo" width="750" /></a>
 
 
 [Under development]
