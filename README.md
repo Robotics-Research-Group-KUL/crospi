@@ -1,7 +1,11 @@
-# Crospi
+<a href="https://aiprism.eu/"><img src="./logo.png" alt="AI-PRISM Logo" width="1024" /></a>
+
 
 [Under development]
 
+
+
+[![Humble Build and Test](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
 
 This package was created to be able to develop constraint-based reactive robot behaviors with eTaSL that can fully operate with the ROS2 architecture (without the need of Orocos). Several software tools are provided such that creation of complex reactive robotic behaviors can be deployed easily in different applications.
 
@@ -41,7 +45,3 @@ under the grant agreement No. <a href="https://cordis.europa.eu/project/id/10105
 - [Santiago Iregui Rincon](https://www.kuleuven.be/wieiswie/en/person/00125886)
 - [Erwin Aertbeliën](https://www.kuleuven.be/wieiswie/en/person/00002405)
 - [Federico Ulloa Rios](https://www.kuleuven.be/wieiswie/en/person/00141400)
-
-
-
-[![Humble Build and Test](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
