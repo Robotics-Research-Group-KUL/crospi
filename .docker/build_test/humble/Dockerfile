@@ -32,9 +32,9 @@ RUN pip3 install jsonref jsonschema colorama flask flask-cors requests
 # -----------------------------
 
 # Environment variables
-# ENV BOOST_ROOT=$HOME/.local/lib/boost/1.89.0
-# ENV CMAKE_PREFIX_PATH=$HOME/.local/lib/boost/1.89.0:${CMAKE_PREFIX_PATH}
-# ENV LD_LIBRARY_PATH=$HOME/.local/lib/boost/1.89.0/lib:${LD_LIBRARY_PATH}
+# ENV BOOST_ROOT=/github/home/.local/lib/boost/1.89.0
+# ENV CMAKE_PREFIX_PATH=/github/home/.local/lib/boost/1.89.0:${CMAKE_PREFIX_PATH}
+# ENV LD_LIBRARY_PATH=/github/home/.local/lib/boost/1.89.0/lib:${LD_LIBRARY_PATH}
 
 # Set working directory
 WORKDIR /tmp
@@ -52,8 +52,8 @@ WORKDIR /tmp/boost_1_89_0
 #     ./b2 -j$(nproc) install
 
 
-RUN mkdir -p $HOME/.local/lib/boost/1.89.0 && \
-    ./bootstrap.sh --prefix=$HOME/.local/lib/boost/1.89.0 && \ 
+RUN mkdir -p /github/home/.local/lib/boost/1.89.0 && \
+    ./bootstrap.sh --prefix=/github/home/.local/lib/boost/1.89.0 && \ 
     ./b2 -j$(nproc) install
 
 # Clean up build files to reduce image size
