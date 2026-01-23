@@ -1,6 +1,8 @@
 FROM osrf/ros:humble-desktop-full
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV BOOST_189_ROOT=/github/home/.local/lib/boost/1.89.0
+
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
@@ -52,8 +54,12 @@ WORKDIR /tmp/boost_1_89_0
 #     ./b2 -j$(nproc) install
 
 
-RUN mkdir -p /github/home/.local/lib/boost/1.89.0 && \
-    ./bootstrap.sh --prefix=/github/home/.local/lib/boost/1.89.0 && \
+# RUN mkdir -p /github/home/.local/lib/boost/1.89.0 && \
+#     ./bootstrap.sh --prefix=/github/home/.local/lib/boost/1.89.0 && \
+#     ./b2 -j$(nproc) install
+
+RUN mkdir -p "$BOOST_189_ROOT" && \
+    ./bootstrap.sh --prefix="$BOOST_189_ROOT" && \
     ./b2 -j$(nproc) install
 
 # Clean up build files to reduce image size

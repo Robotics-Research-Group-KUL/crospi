@@ -37,6 +37,8 @@ jobs:
 
       - name: Build and Test
         uses: ros-tooling/action-ros-ci@v0.4
+        env:
+          BOOST_189_ROOT: /github/home/.local/lib/boost/1.89.0
         with:
           package-name: etasl_wrapper crospi_core crospi_interfaces 
           target-ros2-distro: humble
