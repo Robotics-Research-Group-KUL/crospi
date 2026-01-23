@@ -32,9 +32,9 @@ RUN pip3 install jsonref jsonschema colorama flask flask-cors requests
 # -----------------------------
 
 # Environment variables
-ENV BOOST_ROOT=/root/.local/lib/boost/1.89.0
-ENV CMAKE_PREFIX_PATH=/root/.local/lib/boost/1.89.0:${CMAKE_PREFIX_PATH}
-ENV LD_LIBRARY_PATH=/root/.local/lib/boost/1.89.0/lib:${LD_LIBRARY_PATH}
+# ENV BOOST_ROOT=/root/.local/lib/boost/1.89.0
+# ENV CMAKE_PREFIX_PATH=/root/.local/lib/boost/1.89.0:${CMAKE_PREFIX_PATH}
+# ENV LD_LIBRARY_PATH=/root/.local/lib/boost/1.89.0/lib:${LD_LIBRARY_PATH}
 
 # Set working directory
 WORKDIR /tmp
