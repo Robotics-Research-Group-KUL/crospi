@@ -1,10 +1,10 @@
-name: Build & Push Docker Images (ROS humble)
+name: Build & Push Docker Images (ROS jazzy)
 
 on:
   push:
     branches: [ main ]
     paths:
-      - .docker/build_test/humble/Dockerfile
+      - .docker/build_test/jazzy/Dockerfile
 
   release:
     types: [published]
@@ -36,8 +36,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: .docker/build_test/humble/Dockerfile
+          file: .docker/build_test/jazzy/Dockerfile
           push: true
           tags: |
-            ghcr.io/robotics-research-group-kul/crospi-build-test:humble
-            ghcr.io/robotics-research-group-kul/crospi-build-test:humble-${{ github.sha }}
+            ghcr.io/robotics-research-group-kul/crospi-build-test:jazzy
+            ghcr.io/robotics-research-group-kul/crospi-build-test:jazzy-${{ github.sha }}

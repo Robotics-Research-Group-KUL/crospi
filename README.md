@@ -4,8 +4,17 @@
 [Under development]
 
 
+<div align="center">
 
-[![Humble Build and Test](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
+[![Foxy Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-foxy.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-foxy.yml?branch=main)
+[![Galactic Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-galactic.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-galactic.yml?branch=main)
+[![Humble Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
+[![Iron Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml?branch=main)
+[![Jazzy Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml?branch=main)
+[![Kilted Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-kilted.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-kilted.yml?branch=main)
+[![Rolling Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-rolling.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-rolling.yml?branch=main)
+
+<div align="left">
 
 This package was created to be able to develop constraint-based reactive robot behaviors with eTaSL that can fully operate with the ROS2 architecture (without the need of Orocos). Several software tools are provided such that creation of complex reactive robotic behaviors can be deployed easily in different applications.
 
