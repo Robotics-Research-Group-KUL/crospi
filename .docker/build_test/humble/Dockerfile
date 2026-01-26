@@ -1,7 +1,8 @@
 FROM osrf/ros:humble-desktop-full
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV BOOST_189_ROOT=/github/home/.local/lib/boost/1.89.0
+# ENV BOOST_189_ROOT=/github/home/.local/lib/boost/1.89.0
+ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
