@@ -1,4 +1,4 @@
-FROM osrf/ros:jazzy-desktop-full
+FROM osrf/ros:jazzy-desktop
 
 ENV DEBIAN_FRONTEND=noninteractive
 # ENV BOOST_189_ROOT=/github/home/.local/lib/boost/1.89.0
@@ -7,15 +7,15 @@ ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release
+    lsb-release libpcre3-dev
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
 
 
-# Create a non-root user to avoid file permission issues
+# Create a non-root user to avoid file permission issues (USER_UID=1000 already existed and gave issues in github actions)
 ARG USERNAME=developer
-ARG USER_UID=1000
+ARG USER_UID=1011
 ARG USER_GID=$USER_UID
 
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -23,11 +23,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN pip3 install setuptools==58.2.0 \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+# RUN pip3 install setuptools==58.2.0 
 
-RUN pip3 install jsonref jsonschema colorama flask flask-cors requests
+RUN pip3 install --break-system-packages jsonref jsonschema colorama requests
 
 
 # -----------------------------
