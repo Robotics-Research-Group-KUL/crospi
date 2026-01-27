@@ -3,11 +3,12 @@
 
 [Under development]
 
+Supports only ROS2 humble and later versions
+
+Why? Previous ROS2 versions lack important functionalities such as add_pre_shutdown_callback which allows to safely stop robot execution. 
 
 <div align="center">
 
-[![Foxy Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-foxy.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-foxy.yml?branch=main)
-[![Galactic Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-galactic.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-galactic.yml?branch=main)
 [![Humble Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
 [![Iron Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml?branch=main)
 [![Jazzy Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml?branch=main)

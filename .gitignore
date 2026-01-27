@@ -1,0 +1,8 @@
+/log
+/build
+/install
+*.csv
+.ilua_history
+*.dot
+*.pyc
+.vscode
