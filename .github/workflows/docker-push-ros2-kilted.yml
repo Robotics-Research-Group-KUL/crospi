@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS kilted)
+name: Docker test kilted - Build & Push Docker Images for ROS2 kilted
 
 on:
   push:

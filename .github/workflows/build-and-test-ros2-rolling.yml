@@ -2,6 +2,13 @@ name: rolling Build and Test
 
 on:
   push:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'images/**'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '.gitignore'
   pull_request:
   schedule:
     - cron: "0 5 * * 1"
@@ -17,14 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/robotics-research-group-kul/crospi-build-test:rolling
-
-    # env:
-    #   BOOST_ROOT: /root/.local/lib/boost/1.89.0
-    #   BOOST_INCLUDEDIR: /root/.local/lib/boost/1.89.0/include
-    #   BOOST_LIBRARYDIR: /root/.local/lib/boost/1.89.0/lib
-    #   CMAKE_PREFIX_PATH: /root/.local/lib/boost/1.89.0
-    #   LD_LIBRARY_PATH: /root/.local/lib/boost/1.89.0/lib
-      
     steps:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4

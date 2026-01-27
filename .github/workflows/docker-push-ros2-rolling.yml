@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS rolling)
+name: Docker test rolling - Build & Push Docker Images for ROS2 rolling
 
 on:
   push:

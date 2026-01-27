@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS galactic)
+name: Docker test galactic - Build & Push testing Docker Images for ROS2 galactic
 
 on:
   push:

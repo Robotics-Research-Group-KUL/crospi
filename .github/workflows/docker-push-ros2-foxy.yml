@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS foxy)
+name: Docker test foxy - Build & Push testing Docker Images for ROS2 foxy
 
 on:
   push:

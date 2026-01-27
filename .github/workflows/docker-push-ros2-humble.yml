@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS humble)
+name: Docker test humble - Build & Push testing Docker Images for ROS2 humble
 
 on:
   push:

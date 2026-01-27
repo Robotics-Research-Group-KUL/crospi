@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS jazzy)
+name: Docker test jazzy - Build & Push Docker Images for ROS2 jazzy
 
 on:
   push:

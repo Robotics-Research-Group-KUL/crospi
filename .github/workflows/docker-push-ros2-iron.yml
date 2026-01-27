@@ -1,4 +1,4 @@
-name: Build & Push Docker Images (ROS iron)
+name: Docker test iron - Build & Push testing Docker Images for ROS2 iron
 
 on:
   push:
