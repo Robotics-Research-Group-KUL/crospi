@@ -7,7 +7,7 @@ ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev
+    lsb-release libpcre3-dev libfmt-dev liborocos-kdl-dev ros-galactic-orocos-kdl ros-galactic-kdl-parser
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
