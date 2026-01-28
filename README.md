@@ -1,13 +1,11 @@
 <a href="https://aiprism.eu/"><img src="./logo.png" alt="AI-PRISM Logo" width="750" /></a>
 
 
+<div align="center">
 [Under development]
 
 Supports only ROS2 humble and later versions
 
-Why? Previous ROS2 versions lack important functionalities such as add_pre_shutdown_callback which allows to safely stop robot execution. 
-
-<div align="center">
 
 [![Humble Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
 [![Iron Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml?branch=main)
