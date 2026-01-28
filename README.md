@@ -1,7 +1,9 @@
-<a href="https://aiprism.eu/"><img src="./logo.png" alt="AI-PRISM Logo" width="750" /></a>
-
-
 <div align="center">
+
+
+<a href="https://crospi-website-907f83.pages.gitlab.kuleuven.be/"><img src="./logo.png" alt="crospi Logo" width="750" /></a>
+
+
 [Under development]
 
 Supports only ROS2 humble and later versions
