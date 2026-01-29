@@ -1,7 +1,7 @@
 <div align="center">
 
 
-<a href="https://crospi-website-907f83.pages.gitlab.kuleuven.be/"><img src="./logo.png" alt="crospi Logo" width="750" /></a>
+<a href="https://rob.pages.gitlab.kuleuven.be/crospi/"><img src="./logo.png" alt="crospi Logo" width="750" /></a>
 
 
 [Under development]
@@ -22,7 +22,7 @@ This package was created to be able to develop constraint-based reactive robot b
 
 ## Documentation
 
-For documentation and tutorials, checkout our [crospi website](https://crospi-website-907f83.pages.gitlab.kuleuven.be/).
+For documentation and tutorials, checkout our [crospi website](https://rob.pages.gitlab.kuleuven.be/crospi/).
 
 
 ## License and acknowledgements
