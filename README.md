@@ -25,20 +25,27 @@ This package was created to be able to develop constraint-based reactive robot b
 For documentation and tutorials, checkout our [crospi website](https://rob.pages.gitlab.kuleuven.be/crospi/).
 
 
+## Citation
+
+If you use Crospi in your research, please cite:
+
+```
+@misc{iregui2026crospi,
+    author = {Iregui, Santiago and Ulloa, Federico and Bruyninckx, Herman and Aertbeli\"{e}n, Erwin},
+    title = {Crospi: an open-source Constraint-based Reactive and Orchestrated Sensor-driven PIpeline for robot control},
+    howpublished = "\url{https://github.com/Robotics-Research-Group-KUL/crospi}",
+    year = {2026}
+}
+```
+
 ## License and acknowledgements
 
 Published under the [GNU LESSER GENERAL PUBLIC LICENSE](LICENSE) Version 3, 29 June 2007.
-
 
 <a href="https://aiprism.eu/"><img src="./Ai-Prism_Logo_Horizontal.png" alt="AI-PRISM Logo" width="150" /></a>
 This work was funded by the European Union’s Horizon 2020 research and innovation program 
 under the grant agreement No. <a href="https://cordis.europa.eu/project/id/101058589">101058589</a> ( <a href="https://aiprism.eu/">AI-Prism</a>) 
 
-<p/>
-
-<p/>
-
-<p/>
 
 ## Authors
 <p float="left">
