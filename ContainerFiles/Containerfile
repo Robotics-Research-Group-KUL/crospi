@@ -1,0 +1,70 @@
+# syntax=docker/dockerfile:1.4
+FROM osrf/ros:humble-desktop-full
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1. System Dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sudo git python3-pip vim tree python3-venv \
+    lua5.1 liblua5.1.0-dev luarocks cmake build-essential \
+    ros-dev-tools openssh-client tmux wget ros-$ROS_DISTRO-plotjuggler-ros \
+    libgl1-mesa-dri libgl1-mesa-glx \
+    && luarocks install dkjson \
+    && luarocks install jsonschema \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Fake Root Permissions
+RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
+
+# 3. Python Packages (System-wide)
+RUN pip3 install --no-cache-dir --upgrade \
+    setuptools==58.2.0 \
+    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib
+
+#4. Build and Install Boost (Heavy Operation)
+
+# Define the version and path at the top (makes it easy to update)
+ENV BOOST_VERSION=1.89.0
+ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
+
+
+# Build and Install using the variable
+WORKDIR /tmp
+RUN wget -O boost.tar.gz "https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz/download" \
+&& tar -xzf boost.tar.gz \
+&& cd boost_$(echo ${BOOST_VERSION} | tr . _) \
+&& ./bootstrap.sh --prefix=${BOOST_189_ROOT} \
+&& ./b2 -j$(nproc) install \
+&& cd /tmp \
+&& rm -rf boost*
+
+# Update paths so the system and CMake can find it
+ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
+
+# Ensure the runtime linker knows about the new path
+RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
+
+# 5. Build the BASE Workspace in /opt (Accessible to all users)
+# We use /opt because Distrobox does NOT overwrite this folder.
+ENV BASE_WS=/opt/ros2_crospi_ws
+RUN mkdir -p $BASE_WS/src
+WORKDIR $BASE_WS
+
+RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+    && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+
+# Remove crospi_application_template directory from the crospi repository to avoid build issues
+RUN rm -rf src/crospi/crospi_application_template
+
+# Install dependencies and build
+RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
+    && . /opt/ros/humble/setup.sh \
+    && colcon build --symlink-install --packages-skip crospi_default_plugins \
+    && rm -rf /var/lib/apt/lists/*
+
+# 6. Global Sourcing
+# We add the source command to the GLOBAL bashrc so every user has it automatically
+RUN echo "source $BASE_WS/install/setup.bash" >> /etc/bash.bashrc
+
+WORKDIR /
+CMD ["/usr/bin/bash"]
