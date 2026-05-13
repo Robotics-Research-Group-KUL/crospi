@@ -1,0 +1,45 @@
+name: Podman test jazzy - Build & Push testing Images for ROS2 jazzy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .podman/user_containers/jazzy/Containerfile
+
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-base:
+    name: Build & Push Base Image (Podman)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install podman
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build image
+        run: |
+          podman build \
+            -f .podman/user_containers/jazzy/Containerfile \
+            -t ghcr.io/robotics-research-group-kul/crospi:podman-ros2-jazzy \
+            -t ghcr.io/robotics-research-group-kul/crospi:podman-ros2-jazzy-${{ github.sha }} \
+            .
+
+      - name: Push image
+        run: |
+          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-jazzy
+          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-jazzy-${{ github.sha }}
