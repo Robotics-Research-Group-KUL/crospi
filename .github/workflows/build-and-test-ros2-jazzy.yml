@@ -39,7 +39,7 @@ jobs:
         env:
           BOOST_189_ROOT: /opt/boost/1.89.0
         with:
-          package-name: etasl_wrapper crospi_core crospi_interfaces 
+          package-name: etasl_wrapper crospi_core crospi_interfaces crospi_default_plugins 
           target-ros2-distro: jazzy
           skip-tests: true
           coverage-result: false

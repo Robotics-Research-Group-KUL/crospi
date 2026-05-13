@@ -59,7 +59,7 @@ RUN rm -rf src/crospi/crospi_application_template
 # Install dependencies and build
 RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
     && . /opt/ros/humble/setup.sh \
-    && colcon build --symlink-install --packages-skip crospi_default_plugins \
+    && colcon build --symlink-install \
     && rm -rf /var/lib/apt/lists/*
 
 # 6. Global Sourcing

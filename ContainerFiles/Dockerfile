@@ -74,7 +74,7 @@ RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
 # 9. Build Workspace
 USER $USERNAME
 RUN . /opt/ros/humble/setup.sh && \
-    colcon build --symlink-install --packages-skip crospi_default_plugins
+    colcon build --symlink-install
     # colcon build --symlink-install --packages-skip etasl_ros2_default_plugins
 
 # 10. Final Setup
