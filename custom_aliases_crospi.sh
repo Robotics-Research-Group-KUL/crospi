@@ -1,3 +1,11 @@
+#
+# Some custom aliases and bash functions for working and developing with crospi
+#
+# These are completely optional and not required to work with crospi, but you
+# could find them useful
+# 
+# 2026, E. Aertbeliën
+#
 ###########################################  Added for distrobox crospi ######################
 
 # application configuration file for crospi:
@@ -144,7 +152,7 @@ Common repositories
 -------------------
 git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi_application_template.git
 git clone https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git
-git clone --recursive -b devel/restructuring git@github.com:Robotics-Research-Group-KUL/betfsm.git
+git clone git@github.com:Robotics-Research-Group-KUL/betfsm.git
 
 Building
 --------
