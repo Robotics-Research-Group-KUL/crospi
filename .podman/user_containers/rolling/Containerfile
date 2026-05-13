@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo git python3-pip vim tree python3-venv \
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential \
-    ros-dev-tools openssh-client tmux wget ros-$ROS_DISTRO-plotjuggler-ros \
+    ros-dev-tools openssh-client tmux wget \
     libgl1-mesa-dri libgl1 \
     && luarocks install dkjson \
     && luarocks install jsonschema \
@@ -42,7 +42,8 @@ RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconf
 
 # 4. Python Packages (System-wide)
 RUN pip3 install --no-cache-dir --upgrade \
-    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools uvicorn fastapi websockets ipython plotly
+    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools==58.2.0 \
+    uvicorn fastapi websockets ipython plotly
     # setuptools==58.2.0 \
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
