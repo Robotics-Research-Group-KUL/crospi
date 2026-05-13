@@ -1,4 +1,4 @@
-name: Podman test iron - Build & Push testing Images for ROS2 iron
+name: Podman iron - Build & Push Images for ROS2 iron
 
 on:
   push:

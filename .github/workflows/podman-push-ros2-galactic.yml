@@ -1,4 +1,4 @@
-name: Podman test galactic - Build & Push testing Images for ROS2 galactic
+name: Podman galactic - Build & Push Images for ROS2 galactic
 
 on:
   push:

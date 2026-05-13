@@ -1,4 +1,4 @@
-name: Podman test kilted - Build & Push testing Images for ROS2 kilted
+name: Podman kilted - Build & Push Images for ROS2 kilted
 
 on:
   push:

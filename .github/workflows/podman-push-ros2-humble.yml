@@ -1,4 +1,4 @@
-name: Podman test humble - Build & Push testing Images for ROS2 humble
+name: Podman humble - Build & Push Images for ROS2 humble
 
 on:
   push:

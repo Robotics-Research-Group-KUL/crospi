@@ -44,7 +44,7 @@ RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconf
 
 # 4. Python Packages (System-wide)
 RUN pip3 install --break-system-packages --no-cache-dir \
-    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools==58.2.0
+    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools>=68
     # setuptools==58.2.0 \
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
