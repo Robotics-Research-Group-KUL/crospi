@@ -1,4 +1,4 @@
-name: Podman test rolling - Build & Push testing Images for ROS2 rolling
+name: Podman rolling - Build & Push Images for ROS2 rolling
 
 on:
   push:

@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential \
     ros-dev-tools openssh-client tmux wget \
     libgl1-mesa-dri libgl1 \
+    libpcre3-dev \
     && luarocks install dkjson \
     && luarocks install jsonschema \
     && rm -rf /var/lib/apt/lists/*
