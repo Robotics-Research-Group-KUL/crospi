@@ -42,7 +42,7 @@ ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
 RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
 
 # 4. Python Packages (System-wide)
-RUN pip3 install --no-cache-dir --upgrade \
+RUN pip3 install --break-system-packages --no-cache-dir --upgrade \
     jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools==58.2.0 \
     uvicorn fastapi websockets ipython plotly
     # setuptools==58.2.0 \
