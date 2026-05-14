@@ -3,11 +3,12 @@ name: Podman humble - Build & Push Images for ROS2 humble
 on:
   push:
     branches: [ main ]
-    paths:
-      - .podman/user_containers/humble/Containerfile
-
+    paths-ignore:
+      - 'docs/**'
+      - '.gitignore'
+  pull_request:
   release:
-    types: [published]
+    types: [created, published]
 
 permissions:
   contents: read
@@ -35,11 +36,9 @@ jobs:
         run: |
           podman build \
             -f .podman/user_containers/humble/Containerfile \
-            -t ghcr.io/robotics-research-group-kul/crospi:podman-ros2-humble \
-            -t ghcr.io/robotics-research-group-kul/crospi:podman-ros2-humble-${{ github.sha }} \
+            -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-humble \
             .
 
       - name: Push image
         run: |
-          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-humble
-          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-humble-${{ github.sha }}
+          podman push ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-humble

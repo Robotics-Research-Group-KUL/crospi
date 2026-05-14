@@ -9,6 +9,10 @@ on:
       - '**/*.png'
       - '**/*.jpg'
       - '.gitignore'
+      - 'Containerfile'
+      - '.podman/**'
+      - '.github/workflows/podman-*.yml'
+      - '.github/workflows/podman-*.yaml'
   pull_request:
   schedule:
     - cron: "0 5 * * 1"

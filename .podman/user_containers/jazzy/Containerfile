@@ -1,18 +1,16 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:jazzy-desktop
+ENV ROS_VERSION=jazzy
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 1. System Dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    sudo git python3-pip vim tree python3-venv \
-    lua5.1 liblua5.1.0-dev luarocks cmake build-essential \
-    ros-dev-tools openssh-client tmux wget ros-$ROS_DISTRO-plotjuggler-ros \
-    libgl1-mesa-dri libgl1-mesa-glx \
-    libpcre3-dev \
-    && luarocks install dkjson \
-    && luarocks install jsonschema \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
+    lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
+    lsb-release libpcre3-dev libfmt-dev
+
+RUN luarocks install dkjson
+RUN luarocks install jsonschema
 
 # 2. Fake Root Permissions
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
@@ -42,8 +40,7 @@ ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
 RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
 
 # 4. Python Packages (System-wide)
-RUN pip3 install --no-cache-dir --upgrade \
-    jsonref jsonschema colorama flask flask-cors requests pandas numpy matplotlib setuptools uvicorn fastapi websockets ipython plotly 
+RUN pip3 install --break-system-packages jsonref jsonschema colorama requests
     # setuptools==58.2.0 \
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
@@ -52,17 +49,20 @@ ENV BASE_WS=/opt/ros2_crospi_ws
 RUN mkdir -p $BASE_WS/src
 WORKDIR $BASE_WS
 
-RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
+# RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
 
-# RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
-# && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+&& git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
 
 # Remove crospi_application_template directory from the crospi repository to avoid build issues
 # RUN rm -rf src/crospi/crospi_application_template
 
+RUN rosdep init || true && \
+    rosdep update
+
 # Install dependencies and build
 RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
-    && . /opt/ros/humble/setup.sh \
+    && . /opt/ros/$ROS_VERSION/setup.sh \
     && colcon build --symlink-install \
     && rm -rf /var/lib/apt/lists/*
 
