@@ -61,7 +61,7 @@ RUN rosdep init || true && \
 
 # Install dependencies and build
 RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
-    && . /opt/ros/humble/setup.sh \
+    && . /opt/ros/kilted/setup.sh \
     && colcon build --symlink-install \
     && rm -rf /var/lib/apt/lists/*
 
