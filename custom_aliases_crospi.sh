@@ -50,7 +50,6 @@ build_ws() {
 }
 
 
-
 #
 # roscd
 #
@@ -58,21 +57,6 @@ build_ws() {
 #
 #
 
-# Auto completion
-function _roscd_autocomplete() {
-    # Clear previously generated completions
-    COMPREPLY=()
-
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local packages
-    packages=$(ros2 pkg list 2>/dev/null)
-
-    COMPREPLY=($(compgen -W "${packages}" -- "$cur"))
-    return 0
-}
-
-# Register the completion function for the roscd command.
-complete -F _roscd_autocomplete roscd
 
 function roscd() {
     # Check for help arguments
@@ -86,8 +70,8 @@ function roscd() {
 
     # If no argument is given, go to the default workspace's root
     if [ -z "$1" ]; then
-    	echo "no package given"
-    	return 1
+            echo "No argument given, will not change directory."
+            return 1
     fi
 
     local pkg_name="$1"
@@ -99,7 +83,7 @@ function roscd() {
     fi
 
     # Split AMENT_PREFIX_PATH by ':'
-    echo "$AMENT_PREFIX_PATH" | IFS=':' read -r -a paths 
+    IFS=':' read -r -a paths <<< "$AMENT_PREFIX_PATH"
 
     for prefix in "${paths[@]}"; do
         # Check if prefix/share/ament_index/resource_index/packages/<pkg_name> exists
@@ -127,6 +111,8 @@ function roscd() {
     echo "Package '$pkg_name' not found."
     return 1
 }
+
+
 
 #
 # end of roscd
