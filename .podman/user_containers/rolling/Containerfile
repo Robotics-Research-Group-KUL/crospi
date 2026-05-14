@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. System Dependencies
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev libfmt-dev
+    lsb-release libpcre3-dev libfmt-dev\
     ros-$ROS_VERSION-ament-cmake \
     ros-$ROS_VERSION-ament-cmake-core \
     python3-colcon-common-extensions
