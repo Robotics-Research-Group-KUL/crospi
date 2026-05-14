@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:kilted-desktop
+ENV ROS_VERSION=kilted
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -48,10 +49,10 @@ ENV BASE_WS=/opt/ros2_crospi_ws
 RUN mkdir -p $BASE_WS/src
 WORKDIR $BASE_WS
 
-RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
+# RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
 
-# RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
-# && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+&& git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
 
 # Remove crospi_application_template directory from the crospi repository to avoid build issues
 # RUN rm -rf src/crospi/crospi_application_template
@@ -61,7 +62,7 @@ RUN rosdep init || true && \
 
 # Install dependencies and build
 RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
-    && . /opt/ros/kilted/setup.sh \
+    && . /opt/ros/$ROS_VERSION/setup.sh \
     && colcon build --symlink-install \
     && rm -rf /var/lib/apt/lists/*
 

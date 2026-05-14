@@ -41,5 +41,4 @@ jobs:
 
       - name: Push image
         run: |
-          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-kilted
-          podman push ghcr.io/robotics-research-group-kul/crospi:podman-ros2-kilted-${{ github.sha }}
+          podman push ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-kilted
