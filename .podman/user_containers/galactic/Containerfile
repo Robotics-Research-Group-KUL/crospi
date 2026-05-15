@@ -20,6 +20,7 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 #3. Build and Install Boost (Heavy Operation)
 
 # Define the version and path at the top (makes it easy to update)
+ENV BOOST_VERSION=1.89.0
 ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
 
 

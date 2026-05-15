@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:foxy-desktop
 ENV ROS_VERSION=foxy
-ENV BOOST_VERSION=1.89.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -21,8 +20,8 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 #3. Build and Install Boost (Heavy Operation)
 
 # Define the version and path at the top (makes it easy to update)
+ENV BOOST_VERSION=1.89.0
 ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
-
 
 # Set working directory
 WORKDIR /tmp
