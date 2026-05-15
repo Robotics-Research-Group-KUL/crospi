@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:jazzy-desktop
-SHELL ["/bin/bash", "-c"]
 ENV MY_ROS_DISTRO=jazzy
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -61,13 +60,15 @@ RUN rosdep init || true && \
     rosdep update
 
 # Install dependencies and build
-RUN apt-get update && \
-    rosdep init || true && \
+RUN /bin/bash -c '\
+    apt-get update && \
+    (rosdep init || true) && \
     rosdep update && \
     source /opt/ros/$MY_ROS_DISTRO/setup.bash && \
     rosdep install --from-paths src -y --ignore-src && \
     colcon build --symlink-install && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+'
 
 # 6. Global Sourcing
 # We add the source command to the GLOBAL bashrc so every user has it automatically
