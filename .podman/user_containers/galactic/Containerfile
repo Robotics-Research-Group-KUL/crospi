@@ -27,18 +27,12 @@ ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
 WORKDIR /tmp
 RUN wget -O boost_install.tar.gz "https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download" && \
     tar -xvzf boost_install.tar.gz && \
-    rm boost_install.tar.gz
-
-# Build and install Boost
-WORKDIR /tmp/boost_install
-
-RUN mkdir -p "$BOOST_189_ROOT" && \
-    ./bootstrap.sh --prefix="$BOOST_189_ROOT" && \
-    ./b2 -j$(nproc) install
-
-# Clean up build files to reduce image size
-WORKDIR /
-RUN rm -rf /tmp/boost_install
+    rm boost_install.tar.gz && \
+    cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
+    ./bootstrap.sh --prefix=${BOOST_189_ROOT} && \
+    ./b2 -j$(nproc) install && \
+    cd /tmp && \
+    rm -rf boost*
 
 # # Build and Install using the variable
 # WORKDIR /tmp

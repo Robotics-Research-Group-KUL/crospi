@@ -22,26 +22,21 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 #3. Build and Install Boost (Heavy Operation)
 
 # Define the version and path at the top (makes it easy to update)
-ENV BOOST_VERSION=1.89.0
 ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
 
 
-# Build and Install using the variable
+# Set working directory
 WORKDIR /tmp
-RUN wget -O boost.tar.gz "https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz/download" \
-&& tar -xzf boost.tar.gz \
-&& cd boost_$(echo ${BOOST_VERSION} | tr . _) \
-&& ./bootstrap.sh --prefix=${BOOST_189_ROOT} \
-&& ./b2 -j$(nproc) install \
-&& cd /tmp \
-&& rm -rf boost*
+RUN wget -O boost_install.tar.gz "https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download" && \
+    tar -xvzf boost_install.tar.gz && \
+    rm boost_install.tar.gz && \
+    cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
+    ./bootstrap.sh --prefix=${BOOST_189_ROOT} && \
+    ./b2 -j$(nproc) install && \
+    cd /tmp && \
+    rm -rf boost*
 
-# Update paths so the system and CMake can find it
-ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
-
-# Ensure the runtime linker knows about the new path
-RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
-
+    
 # 4. Python Packages (System-wide)
 RUN pip3 install --break-system-packages jsonref jsonschema colorama requests
     # setuptools==58.2.0 \
