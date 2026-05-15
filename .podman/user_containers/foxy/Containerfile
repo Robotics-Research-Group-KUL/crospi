@@ -1,16 +1,14 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:foxy-desktop
 ENV ROS_VERSION=foxy
+ENV BOOST_VERSION=1.89.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 1. System Dependencies
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev libfmt-dev liborocos-kdl-dev ros-foxy-orocos-kdl ros-foxy-kdl-parser\
-    ros-$ROS_VERSION-ament-cmake \
-    ros-$ROS_VERSION-ament-cmake-core \
-    python3-colcon-common-extensions
+    lsb-release libpcre3-dev libfmt-dev liborocos-kdl-dev ros-${ROS_VERSION}-orocos-kdl ros-${ROS_VERSION}-kdl-parser 
 
 
 RUN luarocks install dkjson
@@ -23,25 +21,42 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 #3. Build and Install Boost (Heavy Operation)
 
 # Define the version and path at the top (makes it easy to update)
-ENV BOOST_VERSION=1.89.0
 ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
 
 
-# Build and Install using the variable
+# Set working directory
 WORKDIR /tmp
-RUN wget -O boost.tar.gz "https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz/download" \
-&& tar -xzf boost.tar.gz \
-&& cd boost_$(echo ${BOOST_VERSION} | tr . _) \
-&& ./bootstrap.sh --prefix=${BOOST_189_ROOT} \
-&& ./b2 -j$(nproc) install \
-&& cd /tmp \
-&& rm -rf boost*
+RUN wget -O boost_install.tar.gz "https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download" && \
+    tar -xvzf boost_install.tar.gz && \
+    rm boost_install.tar.gz
 
-# Update paths so the system and CMake can find it
-ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
+# Build and install Boost
+WORKDIR /tmp/boost_install
 
-# Ensure the runtime linker knows about the new path
-RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
+RUN mkdir -p "$BOOST_189_ROOT" && \
+    ./bootstrap.sh --prefix="$BOOST_189_ROOT" && \
+    ./b2 -j$(nproc) install
+
+# Clean up build files to reduce image size
+WORKDIR /
+RUN rm -rf /tmp/boost_install
+
+# # Build and Install using the variable
+# WORKDIR /tmp
+# RUN wget -O boost.tar.gz "https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz/download" \
+# && tar -xzf boost.tar.gz \
+# && cd boost_$(echo ${BOOST_VERSION} | tr . _) \
+# && ./bootstrap.sh --prefix=${BOOST_189_ROOT} \
+# && ./b2 -j$(nproc) install \
+# && cd /tmp \
+# && rm -rf boost*
+
+# # Update paths so the system and CMake can find it
+# ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
+
+# # Ensure the runtime linker knows about the new path
+# RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
+
 
 # 4. Python Packages (System-wide)
 RUN pip3 install jsonref jsonschema colorama requests
@@ -64,8 +79,11 @@ RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.
 # Install dependencies and build
 
 
+RUN rosdep init || true && \
+    rosdep update
+
 RUN apt-get update && \
-    rosdep init || true && \
+    (rosdep init || true) && \
     rosdep update && \
     . /opt/ros/$ROS_VERSION/setup.sh && \
     rosdep install --from-paths src -y --ignore-src && \
