@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.4
 FROM docker.io/osrf/ros:kilted-desktop
-ENV ROS_VERSION=kilted
+SHELL ["/bin/bash", "-c"]
+ENV MY_ROS_DISTRO=kilted
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,7 +65,7 @@ RUN rosdep init || true && \
 RUN apt-get update && \
     rosdep init || true && \
     rosdep update && \
-    . /opt/ros/$ROS_VERSION/setup.sh && \
+    source /opt/ros/$MY_ROS_DISTRO/setup.bash && \
     rosdep install --from-paths src -y --ignore-src && \
     colcon build --symlink-install && \
     rm -rf /var/lib/apt/lists/*
