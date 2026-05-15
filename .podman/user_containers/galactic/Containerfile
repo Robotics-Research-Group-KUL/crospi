@@ -3,14 +3,11 @@ FROM docker.io/osrf/ros:galactic-desktop
 ENV ROS_VERSION=galactic
 
 ENV DEBIAN_FRONTEND=noninteractive
-# ENV BOOST_189_ROOT=/github/home/.local/lib/boost/1.89.0
-ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
-
+# 1. System Dependencies
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev libfmt-dev liborocos-kdl-dev ros-${ROS_VERSION}-orocos-kdl ros-${ROS_VERSION}-kdl-parser 
-
+    lsb-release libpcre3-dev libfmt-dev liborocos-kdl-dev ros-galactic-orocos-kdl ros-galactic-kdl-parser
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
@@ -18,62 +15,33 @@ RUN luarocks install jsonschema
 # 2. Fake Root Permissions
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 
-# Create a non-root user to avoid file permission issues (USER_UID=1000 already existed and gave issues in github actions)
-ARG USERNAME=developer
-ARG USER_UID=1011
-ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+#3. Build and Install Boost (Heavy Operation)
 
-# RUN pip3 install setuptools==58.2.0 
-
-RUN pip3 install jsonref jsonschema colorama requests
+# Define the version and path at the top (makes it easy to update)
+ENV BOOST_VERSION=1.89.0
+ENV BOOST_189_ROOT=/opt/boost_${BOOST_VERSION}
 
 
-# -----------------------------
-# Boost 1.89
-# -----------------------------
-
-# Environment variables
-# ENV BOOST_ROOT=/github/home/.local/lib/boost/1.89.0
-# ENV CMAKE_PREFIX_PATH=/github/home/.local/lib/boost/1.89.0:${CMAKE_PREFIX_PATH}
-# ENV LD_LIBRARY_PATH=/github/home/.local/lib/boost/1.89.0/lib:${LD_LIBRARY_PATH}
-
-# Set working directory
+# Build and Install using the variable
 WORKDIR /tmp
+RUN wget -O boost.tar.gz "https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz/download" \
+&& tar -xzf boost.tar.gz \
+&& cd boost_$(echo ${BOOST_VERSION} | tr . _) \
+&& ./bootstrap.sh --prefix=${BOOST_189_ROOT} \
+&& ./b2 -j$(nproc) install \
+&& cd /tmp \
+&& rm -rf boost*
 
-# Download and extract Boost 1.89.0
-RUN wget -O boost_1_89_0.tar.gz "https://sourceforge.net/projects/boost/files/boost/1.89.0/boost_1_89_0.tar.gz/download" && \
-    tar -xvzf boost_1_89_0.tar.gz && \
-    rm boost_1_89_0.tar.gz
+# Update paths so the system and CMake can find it
+ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
 
-# Build and install Boost
-WORKDIR /tmp/boost_1_89_0
+# Ensure the runtime linker knows about the new path
+RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
 
-# RUN mkdir -p /opt/boost/1.89.0 && \
-#     ./bootstrap.sh --prefix=/opt/boost/1.89.0 && \
-#     ./b2 -j$(nproc) install
-
-
-# RUN mkdir -p /github/home/.local/lib/boost/1.89.0 && \
-#     ./bootstrap.sh --prefix=/github/home/.local/lib/boost/1.89.0 && \
-#     ./b2 -j$(nproc) install
-
-RUN mkdir -p "$BOOST_189_ROOT" && \
-    ./bootstrap.sh --prefix="$BOOST_189_ROOT" && \
-    ./b2 -j$(nproc) install
-
-# Clean up build files to reduce image size
-WORKDIR /
-RUN rm -rf /tmp/boost_1_89_0
-
-
-RUN rosdep init || true && \
-    rosdep update
-
+# 4. Python Packages (System-wide)
+RUN pip3 install jsonref jsonschema colorama requests
+    # setuptools==58.2.0 \
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
 # We use /opt because Distrobox does NOT overwrite this folder.
@@ -86,12 +54,20 @@ WORKDIR $BASE_WS
 RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
 && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
 
+# Remove crospi_application_template directory from the crospi repository to avoid build issues
+# RUN rm -rf src/crospi/crospi_application_template
+
+RUN rosdep init || true && \
+    rosdep update
 
 # Install dependencies and build
-RUN apt-get update && rosdep install --from-paths src -y --ignore-src \
-    && . /opt/ros/humble/setup.sh \
-    && colcon build --symlink-install \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    rosdep init || true && \
+    rosdep update && \
+    . /opt/ros/$ROS_VERSION/setup.sh && \
+    rosdep install --from-paths src -y --ignore-src && \
+    colcon build --symlink-install && \
+    rm -rf /var/lib/apt/lists/*
 
 # 6. Global Sourcing
 # We add the source command to the GLOBAL bashrc so every user has it automatically
