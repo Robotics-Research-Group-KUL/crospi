@@ -73,6 +73,7 @@ RUN /bin/bash -c '\
 
 # 6. Global Sourcing
 # We add the source command to the GLOBAL bashrc so every user has it automatically
+RUN echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash " >> /etc/bash.bashrc
 RUN echo "source $BASE_WS/install/setup.bash" >> /etc/bash.bashrc
 
 WORKDIR /
