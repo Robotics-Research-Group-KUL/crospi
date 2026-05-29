@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     ros-$MY_ROS_DISTRO-ament-cmake-core \
     python3-colcon-common-extensions
 
+# Nice to have packages:
+RUN apt-get update && apt-get install -y openssh-client tmux wget \
+    ros-$MY_ROS_DISTRO-plotjuggler-ros libgl1-mesa-dri libgl1
+
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
 
@@ -39,8 +43,12 @@ RUN wget -O boost_install.tar.gz "https://sourceforge.net/projects/boost/files/b
 
     
 # 4. Python Packages (System-wide)
-RUN pip3 install --break-system-packages jsonref jsonschema colorama requests
+RUN pip3 install --break-system-packages jsonref jsonschema colorama requests uvicorn websockets
     # setuptools==58.2.0 \
+
+# Nice-to-have Python Packages
+RUN pip3 install --break-system-packages flask flask-cors pandas numpy matplotlib ipython plotly
+
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
 # We use /opt because Distrobox does NOT overwrite this folder.
