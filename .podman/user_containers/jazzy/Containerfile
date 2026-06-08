@@ -46,8 +46,11 @@ RUN wget -O boost_install.tar.gz "https://sourceforge.net/projects/boost/files/b
 RUN pip3 install --break-system-packages jsonref jsonschema colorama requests uvicorn websockets
     # setuptools==58.2.0 \
 
-# Nice-to-have Python Packages
-RUN pip3 install --break-system-packages flask flask-cors pandas numpy matplotlib ipython plotly
+# Nice-to-have Python Packages (ipython via apt to avoid psutil conflict; plotly also via apt)
+RUN apt-get update && apt-get install -y python3-ipython python3-plotly
+
+# Nice-to-have Python Packages (remaining via pip)
+RUN pip3 install --break-system-packages flask flask-cors pandas numpy matplotlib
 
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
