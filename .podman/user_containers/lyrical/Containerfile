@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
 
 # Nice to have packages:
 RUN apt-get update && apt-get install -y openssh-client tmux wget \
-    ros-$MY_ROS_DISTRO-plotjuggler-ros libgl1-mesa-dri libgl1
+     libgl1-mesa-dri libgl1
+
+    #  ros-$MY_ROS_DISTRO-plotjuggler-ros is not yet available for lyrical.
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
