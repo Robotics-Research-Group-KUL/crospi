@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
 RUN apt-get install -y libpcre2-dev && \
     cd /tmp && \
     wget -q "http://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre3-dev_8.39-15build1_amd64.deb" && \
-    dpkg -i libpcre3-dev_8.39-15build1_amd64.deb && \
-    rm libpcre3-dev_8.39-15build1_amd64.deb && \
-    apt-get install -f -y
+    dpkg -i libpcre3-dev_8.39-15build1_amd64.deb || true && \
+    apt-get install -f -y && \
+    rm -f libpcre3-dev_8.39-15build1_amd64.deb
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
