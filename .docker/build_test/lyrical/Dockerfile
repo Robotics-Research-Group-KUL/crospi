@@ -6,7 +6,10 @@ ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev libfmt-dev
+    lsb-release libpcre2-dev libfmt-dev
+
+#libpcre3-dev was changed to libpcre2-dev (version number is confusing...) because Ubuntu 26 does not have libpcre3-dev.
+#See https://github.com/iv-org/invidious/issues/5652
 
 RUN luarocks install dkjson
 RUN luarocks install jsonschema
