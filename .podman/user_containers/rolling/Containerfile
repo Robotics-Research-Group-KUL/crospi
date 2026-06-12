@@ -58,8 +58,10 @@ WORKDIR $BASE_WS
 
 # RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
 
-RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
-&& git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+RUN git clone --branch main https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+&& git -C src/crospi submodule update --init --recursive --remote \
+&& git clone --branch main https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm \
+&& git -C src/betfsm submodule update --init --recursive --remote
 
 # Remove crospi_application_template directory from the crospi repository to avoid build issues
 # RUN rm -rf src/crospi/crospi_application_template
