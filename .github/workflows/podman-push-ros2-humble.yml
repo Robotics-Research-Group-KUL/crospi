@@ -34,7 +34,7 @@ jobs:
 
       - name: Build image
         run: |
-          podman build \
+          podman build --no-cache \
             -f .podman/user_containers/humble/Containerfile \
             -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-humble \
             .
