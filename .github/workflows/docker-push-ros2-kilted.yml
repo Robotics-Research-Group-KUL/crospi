@@ -1,10 +1,9 @@
 name: Docker test kilted - Build & Push Docker Images for ROS2 kilted
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/kilted/Dockerfile
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
   release:
     types: [published]

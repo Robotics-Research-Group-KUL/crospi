@@ -1,10 +1,9 @@
 name: Docker test lyrical - Build & Push Docker Images for ROS2 lyrical
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/lyrical/Dockerfile
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
   release:
     types: [published]

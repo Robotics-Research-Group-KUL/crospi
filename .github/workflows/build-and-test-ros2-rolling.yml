@@ -14,10 +14,13 @@ on:
       - '.github/workflows/podman-*.yml'
       - '.github/workflows/podman-*.yaml'
   pull_request:
-  schedule:
-    - cron: "0 5 * * 1"
+  workflow_dispatch:
   release:
     types: [created, published]
+  workflow_run:
+    workflows: ["Docker test rolling - Build & Push Docker Images for ROS2 rolling"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read

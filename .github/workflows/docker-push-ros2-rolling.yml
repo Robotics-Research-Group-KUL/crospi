@@ -1,10 +1,9 @@
 name: Docker test rolling - Build & Push Docker Images for ROS2 rolling
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/rolling/Dockerfile
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
   release:
     types: [published]

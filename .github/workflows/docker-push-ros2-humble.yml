@@ -1,10 +1,9 @@
 name: Docker test humble - Build & Push testing Docker Images for ROS2 humble
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/humble/Dockerfile
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
   release:
     types: [published]

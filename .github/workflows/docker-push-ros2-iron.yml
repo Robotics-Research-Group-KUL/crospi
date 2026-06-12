@@ -1,13 +1,9 @@
 name: Docker test iron - Build & Push testing Docker Images for ROS2 iron
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/iron/Dockerfile
-
-  release:
-    types: [published]
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read

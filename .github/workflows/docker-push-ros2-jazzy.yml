@@ -1,10 +1,9 @@
 name: Docker test jazzy - Build & Push Docker Images for ROS2 jazzy
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - .docker/build_test/jazzy/Dockerfile
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
 
   release:
     types: [published]
