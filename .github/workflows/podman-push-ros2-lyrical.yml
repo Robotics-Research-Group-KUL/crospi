@@ -35,8 +35,9 @@ jobs:
       - name: Build image
         run: |
           podman build --no-cache \
-            -f .podman/user_containers/lyrical/Containerfile \
-            -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-lyrical \
+            --build-arg CACHE_BUST=${{ github.sha }} \
+            -f .podman/user_containers/rolling/Containerfile \
+            -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-rolling \
             .
 
       - name: Push image

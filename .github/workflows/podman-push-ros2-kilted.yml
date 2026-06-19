@@ -35,6 +35,7 @@ jobs:
       - name: Build image
         run: |
           podman build --no-cache \
+            --build-arg CACHE_BUST=${{ github.sha }} \
             -f .podman/user_containers/kilted/Containerfile \
             -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-kilted \
             .
