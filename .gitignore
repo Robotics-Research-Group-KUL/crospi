@@ -1,6 +1,7 @@
 /log
 /build
 /install
+.betfsm_src/
 *.csv
 .ilua_history
 *.dot

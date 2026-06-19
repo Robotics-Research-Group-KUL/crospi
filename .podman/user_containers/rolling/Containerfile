@@ -56,12 +56,14 @@ ENV BASE_WS=/opt/ros2_crospi_ws
 RUN mkdir -p $BASE_WS/src
 WORKDIR $BASE_WS
 
-# RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi 
+# Copy crospi source from CI build context (preserves .git/ with remote configured)
+# Copy betfsm source (pre-cloned by CI workflow into .betfsm_src/)
+COPY . src/crospi
+COPY .betfsm_src src/betfsm
 
-ARG CACHE_BUST=0
-RUN echo "Cache bust: $CACHE_BUST" \
-&& git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
-&& git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+# Initialize submodules for both repos
+RUN cd src/crospi && git submodule update --init --recursive && cd $BASE_WS \
+&& cd src/betfsm && git submodule update --init --recursive && cd $BASE_WS
 
 # Remove crospi_application_template directory from the crospi repository to avoid build issues
 # RUN rm -rf src/crospi/crospi_application_template

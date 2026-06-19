@@ -23,6 +23,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Clone betfsm for build context
+        run: git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git .betfsm_src
+
       - name: Install Podman
         run: |
           sudo apt-get update
@@ -34,8 +37,7 @@ jobs:
 
       - name: Build image
         run: |
-          podman build --no-cache \
-            --build-arg CACHE_BUST=${{ github.sha }} \
+          podman build \
             -f .podman/user_containers/jazzy/Containerfile \
             -t ghcr.io/robotics-research-group-kul/crospi-betfsm-podman:ros2-jazzy \
             .
