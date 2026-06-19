@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. System Dependencies
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre3-dev libfmt-dev
+    lsb-release libpcre3-dev libfmt-dev python3-numpy python3-scipy python3-pandas python3-matplotlib
 
 # Nice to have packages:
 RUN apt-get update && apt-get install -y openssh-client tmux wget \
@@ -44,11 +44,11 @@ ENV LD_LIBRARY_PATH=${BOOST_189_ROOT}/lib:${LD_LIBRARY_PATH}
 RUN echo "${BOOST_189_ROOT}/lib" > /etc/ld.so.conf.d/boost_custom.conf && ldconfig
 
 # 4. Python Packages (System-wide)
-RUN pip3 install jsonref jsonschema colorama requests uvicorn websockets
+RUN pip3 install jsonref jsonschema colorama requests uvicorn websockets fastapi
     # setuptools==58.2.0 \
 
 # Nice-to-have Python Packages
-RUN pip3 install flask flask-cors pandas numpy matplotlib ipython plotly
+RUN pip3 install ipython plotly
 
 # 5. Build the BASE Workspace in /opt (Accessible to all users)
 # We use /opt because Distrobox does NOT overwrite this folder.
