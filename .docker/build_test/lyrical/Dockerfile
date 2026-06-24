@@ -6,19 +6,24 @@ ENV BOOST_189_ROOT=/opt/boost/1.89.0
 
 RUN apt-get update && apt-get install -y git python3-pip vim tree python3-venv\
     lua5.1 liblua5.1.0-dev luarocks cmake build-essential ros-dev-tools software-properties-common\
-    lsb-release libpcre2-dev libfmt-dev
+    lsb-release libfmt-dev
 
 # lrexlib-pcre (luarock dependency of jsonschema) needs pcre.h from libpcre3-dev.
-# Ubuntu 26 removed libpcre3-dev (replaced by libpcre2-dev), so download it from the archive.
-RUN apt-get install -y libpcre2-dev && \
-    cd /tmp && \
-    wget -q "http://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre3-dev_8.39-15build1_amd64.deb" && \
-    dpkg -i libpcre3-dev_8.39-15build1_amd64.deb || true && \
-    apt-get install -f -y && \
-    rm -f libpcre3-dev_8.39-15build1_amd64.deb
+# Build and install PCRE 8.45 from source (libpcre3 dropped in Ubuntu 26.04)
+RUN wget https://sourceforge.net/projects/pcre/files/pcre/8.45/pcre-8.45.tar.gz && \
+    tar xzf pcre-8.45.tar.gz && \
+    cd pcre-8.45 && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig && \
+    cd .. && rm -rf pcre-8.45 pcre-8.45.tar.gz
 
-RUN luarocks install dkjson
-RUN luarocks install jsonschema
+
+RUN luarocks install net-url && \
+    luarocks install dkjson && \
+    luarocks install lrexlib-pcre PCRE_DIR="/usr/local" && \
+    luarocks install jsonschema
 
 
 # Create a non-root user to avoid file permission issues
