@@ -32,7 +32,7 @@ If you use Crospi in your research, please cite:
 
 ```
 @misc{iregui2026crospi,
-    author = {Iregui, Santiago and Ulloa, Federico and Bruyninckx, Herman and Aertbeli\"{e}n, Erwin},
+    author = {Iregui, Santiago and Ulloa, Federico and Aertbeli\"{e}n, Erwin},
     title = {Crospi: an open-source Constraint-based Reactive and Orchestrated Sensor-driven PIpeline for robot control},
     howpublished = "\url{https://github.com/Robotics-Research-Group-KUL/crospi}",
     year = {2026}
