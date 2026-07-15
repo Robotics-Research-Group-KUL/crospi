@@ -1,4 +1,4 @@
-name: Doxygen Documentation
+name: Generate Documentation
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
       - '**/*.cpp'
       - '**/*.c'
       - '**/*.py'
+      - '**/*.lua'
       - 'DoxyfileCpp'
       - 'DoxyfilePy'
   pull_request:
@@ -42,9 +43,14 @@ jobs:
       - name: Generate Python documentation
         run: doxygen DoxyfilePy
 
+      - name: Generate Lua documentation
+        uses: lunarmodules/ldoc@v0
+        with:
+          args: -d luadocs crospi_core/scripts/lib/task_requirements.lua
+
       - name: Prepare GitHub Pages artifact
         run: |
-          mkdir -p _site/cpp _site/py
+          mkdir -p _site/cpp _site/py _site/lua
 
           # Copy C++ docs
           if [ -d cppdocs/html ]; then
@@ -54,6 +60,11 @@ jobs:
           # Copy Python docs
           if [ -d pydocs/html ]; then
             cp -r pydocs/html/* _site/py/
+          fi
+
+          # Copy Lua docs
+          if [ -d luadocs ]; then
+            cp -r luadocs/* _site/lua/
           fi
 
           # Create landing page
@@ -89,6 +100,10 @@ jobs:
                 <a class="card" href="py/index.html">
                   <h2>Python API</h2>
                   <p>Doxygen-generated Python reference</p>
+                </a>
+                <a class="card" href="lua/index.html">
+                  <h2>Lua API</h2>
+                  <p>LDoc-generated Lua reference</p>
                 </a>
               </div>
             </div>
