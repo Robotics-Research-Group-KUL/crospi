@@ -12,7 +12,6 @@ on:
       - '**/*.lua'
       - 'DoxyfileCpp'
       - 'DoxyfilePy'
-      - 'config.ld'
       - '.github/workflows/api-documentation-pages.yml'
   pull_request:
     branches: [main]
@@ -51,7 +50,7 @@ jobs:
         run: doxygen DoxyfilePy
 
       - name: Generate Lua documentation
-        run: ldoc
+        run: ldoc -a -d luadocs crospi_core/scripts/lib/task_requirements.lua
 
       - name: Prepare GitHub Pages artifact
         run: |
