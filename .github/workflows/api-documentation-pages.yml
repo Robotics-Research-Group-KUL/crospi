@@ -37,6 +37,11 @@ jobs:
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
+      - name: Install LDoc
+        run: |
+          sudo apt-get install -y lua5.2 luarocks
+          sudo luarocks install ldoc
+
       - name: Generate C++ documentation
         run: doxygen DoxyfileCpp
 
@@ -44,9 +49,7 @@ jobs:
         run: doxygen DoxyfilePy
 
       - name: Generate Lua documentation
-        uses: lunarmodules/ldoc@v0
-        with:
-          args: -d luadocs crospi_core/scripts/lib/task_requirements.lua
+        run: ldoc -d luadocs crospi_core/scripts/lib/task_requirements.lua
 
       - name: Prepare GitHub Pages artifact
         run: |
