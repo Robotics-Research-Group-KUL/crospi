@@ -96,6 +96,7 @@ jobs:
             <div class="container">
               <h1>Crospi Documentation</h1>
               <p>Auto-generated API documentation from source code</p>
+              <p>Only code that users of Crospi could interact with is documented here. Internal Crospi code is excluded.</p>
               <div class="cards">
                 <a class="card" href="cpp/index.html">
                   <h2>C++ API</h2>
