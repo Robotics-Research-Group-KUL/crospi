@@ -12,6 +12,7 @@ on:
       - '**/*.lua'
       - 'DoxyfileCpp'
       - 'DoxyfilePy'
+      - '.github/workflows/api-documentation-pages.yml'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -39,7 +40,7 @@ jobs:
 
       - name: Install LDoc
         run: |
-          sudo apt-get install -y lua5.2 luarocks
+          sudo apt-get install -y lua5.2 liblua5.2-dev luarocks
           sudo luarocks install ldoc
 
       - name: Generate C++ documentation
