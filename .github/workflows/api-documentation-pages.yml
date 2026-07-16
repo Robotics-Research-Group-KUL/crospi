@@ -10,7 +10,8 @@ on:
       - '**/*.c'
       - '**/*.py'
       - '**/*.lua'
-      - 'DoxyfileCpp'
+      - 'DoxyfileCppPartial'
+      - 'DoxyfileCppFull'
       - 'DoxyfilePy'
       - '.github/workflows/api-documentation-pages.yml'
   pull_request:
@@ -43,8 +44,14 @@ jobs:
           sudo apt-get install -y lua5.2 liblua5.2-dev luarocks
           sudo luarocks install ldoc
 
-      - name: Generate C++ documentation
-        run: doxygen DoxyfileCpp
+      - name: Generate C++ documentation (partial)
+        run: doxygen DoxyfileCppPartial
+
+      - name: Save partial C++ docs
+        run: mv cppdocs/html cppdocs/html-partial
+
+      - name: Generate C++ documentation (full)
+        run: doxygen DoxyfileCppFull
 
       - name: Generate Python documentation
         run: doxygen DoxyfilePy
@@ -54,11 +61,16 @@ jobs:
 
       - name: Prepare GitHub Pages artifact
         run: |
-          mkdir -p _site/cpp _site/py _site/lua
+          mkdir -p _site/cpp _site/cpp-full _site/py _site/lua
 
-          # Copy C++ docs
+          # Copy C++ partial docs
+          if [ -d cppdocs/html-partial ]; then
+            cp -r cppdocs/html-partial/* _site/cpp/
+          fi
+
+          # Copy C++ full docs
           if [ -d cppdocs/html ]; then
-            cp -r cppdocs/html/* _site/cpp/
+            cp -r cppdocs/html/* _site/cpp-full/
           fi
 
           # Copy Python docs
@@ -99,16 +111,24 @@ jobs:
               <p>Only code that users of Crospi could interact with is documented here. Internal Crospi code is excluded.</p>
               <div class="cards">
                 <a class="card" href="cpp/index.html">
-                  <h2>C++ API</h2>
-                  <p>Doxygen-generated C++ reference</p>
+                  <h2>Plugins C++ API</h2>
+                  <p>Doxygen-generated C++ documentation</p>
+                  <p>For Crospi plugin developers</p>
+                </a>
+                <a class="card" href="cpp-full/index.html">
+                  <h2>Full C++ API</h2>
+                  <p>Complete Doxygen-generated C++ documentation</p>
+                  <p>Including internal Crospi code</p>
                 </a>
                 <a class="card" href="py/index.html">
-                  <h2>Python API</h2>
-                  <p>Doxygen-generated Python reference</p>
+                  <h2>Orchestration Python API</h2>
+                  <p>Doxygen-generated Python documentation</p>
+                  <p>For application or skill developers (orchestration)</p>
                 </a>
                 <a class="card" href="lua/index.html">
                   <h2>Lua API</h2>
-                  <p>LDoc-generated Lua reference</p>
+                  <p>LDoc-generated Lua documentation</p>
+                  <p>For eTaSL task specification developers</p>
                 </a>
               </div>
             </div>
