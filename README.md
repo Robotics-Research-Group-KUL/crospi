@@ -4,8 +4,6 @@
 <a href="https://rob.pages.gitlab.kuleuven.be/crospi/"><img src="./logo.png" alt="crospi Logo" width="750" /></a>
 
 
-[Under development]
-
 Supports only ROS2 humble and later versions
 
 
@@ -18,12 +16,21 @@ Supports only ROS2 humble and later versions
 
 <div align="left">
 
-This package was created to be able to develop constraint-based reactive robot behaviors with eTaSL that can fully operate with the ROS2 architecture (without the need of Orocos). Several software tools are provided such that creation of complex reactive robotic behaviors can be deployed easily in different applications.
+## Summary
+
+Crospi is a ROS2 pipeline that allows developers to easily define reactive robot behaviors through high-level constraint-based task specifications. It represents a new generation of our software stack, building upon earlier frameworks such as [iTaSC](https://orocos.org/itasc.html) and [eTaSL](https://etasl.pages.gitlab.kuleuven.be/), and consolidating mature capabilities that were previously developed within [Orocos-based systems](https://rob.pages.gitlab.kuleuven.be/legacy_etasl_website/). By leveraging real-time sensor-driven control, Crospi enables robots to continuously adapt to uncertainty and environmental changes, moving beyond traditional sense–plan–act paradigms toward fully reactive control strategies. Unlike motion-planning frameworks such as MoveIt, which focus on the sense-plan-act paradigm, producing collision-free trajectories, Crospi emphasizes continuous feedback and constraint satisfaction during execution, enabling truly reactive, sensor-driven behaviors. Crospi also provides smart tools that enable developers to create libraries that can be easily shared with other developers and orchestrated into complex applications.
 
 
 ## Documentation
 
-For documentation and tutorials, checkout our [crospi website](https://rob.pages.gitlab.kuleuven.be/crospi/).
+Ready to get started? Our [documentation website](https://rob.pages.gitlab.kuleuven.be/crospi/) has everything you need:
+
+- **Getting Started** — installation, running examples, and your first application.
+- **Tutorials** — step-by-step guides for developing task specifications, skills, and applications.
+- **API Reference** — detailed documentation for developers.
+- **Glossary** — definitions of all key terms.
+
+Whether you are writing your first eTaSL task specification or building a multi-skill robotic application, the documentation walks you through every layer of the Crospi stack.
 
 
 ## Citation
@@ -55,6 +62,9 @@ under the grant agreement No. <a href="https://cordis.europa.eu/project/id/10105
 </a>
 <a href="https://www.mech.kuleuven.be/en/research/ram">
     <img src="./logo_RAM.png" alt="RAM Logo" width="110" />
+</a>
+<a href="https://www.flandersmake.be/en">
+    <img src="./FM_LOGO_whitebg.png" alt="RAM Logo" width="400" />
 </a>
 </p>
 
