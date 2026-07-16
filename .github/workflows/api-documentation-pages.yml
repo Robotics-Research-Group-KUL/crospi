@@ -115,11 +115,6 @@ jobs:
                   <p>Doxygen-generated C++ documentation</p>
                   <p>For Crospi plugin developers</p>
                 </a>
-                <a class="card" href="cpp-full/index.html">
-                  <h2>Full C++ API</h2>
-                  <p>Complete Doxygen-generated C++ documentation</p>
-                  <p>Including internal Crospi code</p>
-                </a>
                 <a class="card" href="py/index.html">
                   <h2>Orchestration Python API</h2>
                   <p>Doxygen-generated Python documentation</p>
@@ -129,6 +124,11 @@ jobs:
                   <h2>Lua API</h2>
                   <p>LDoc-generated Lua documentation</p>
                   <p>For eTaSL task specification developers</p>
+                </a>
+                <a class="card" href="cpp-full/index.html">
+                  <h2>Full C++ API</h2>
+                  <p>Complete Doxygen-generated C++ documentation</p>
+                  <p>For Crospi source code contributors</p>
                 </a>
               </div>
             </div>
