@@ -131,6 +131,14 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
     only at build time.
   - **Behaviour change:** pull requests only build the images; they are pushed only from `main` and
     releases (before, every pull request overwrote the published images).
+- **The images contain the tested commit** (uncommitted): new build argument `CROSPI_REF` (branch, tag or full
+  commit hash, default `main`); `container-images.yml` passes the commit that triggered the workflow (the head of
+  a pull request), so pull requests test their own code instead of `main`.
+- **Fixed** (uncommitted): on Ubuntu 26.04 (Lyrical, Rolling) the PCRE source build was never used, because
+  `apt-cache show libpcre3-dev` succeeds for a package that is only referenced by others; now checks for an
+  installation candidate (`apt-cache policy`).
+- **Fixed** (uncommitted): image pushes are retried (3 attempts) since GHCR occasionally answers an upload with a
+  transient `500 Internal Server Error`.
 - **Fixed:** the user container builds failed in `rosdep install` because `crospi_core` and
   `crospi_default_plugins` declared the non-existent rosdep keys `python-jsonref-pip` and
   `python-jsonschema-pip` (see their entries).

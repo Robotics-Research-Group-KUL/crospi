@@ -2,6 +2,7 @@ name: Container images - Build & Push
 
 # Builds the crospi user container (containers/Containerfile) for every ROS 2 distribution with podman and pushes it
 # to ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-<distro>. The images work with podman and docker.
+# The image contains the crospi commit that triggered the workflow (CROSPI_REF build argument).
 # Pull requests only build the images (to test them); pushes to main and releases also push them.
 
 on:
@@ -49,8 +50,10 @@ jobs:
 
       - name: Build image
         run: |
+          # Build the crospi commit being tested (the head of a pull request, otherwise the pushed/released commit)
           podman build --no-cache \
             --build-arg ROS_DISTRO=${{ matrix.distro }} \
+            --build-arg CROSPI_REF=${{ github.event.pull_request.head.sha || github.sha }} \
             -f containers/Containerfile \
             -t ${{ env.IMAGE }}:ros2-${{ matrix.distro }} \
             -t ${{ env.LEGACY_IMAGE }}:ros2-${{ matrix.distro }} \
@@ -63,6 +66,15 @@ jobs:
 
       - name: Push image
         if: github.event_name != 'pull_request'
+        # GHCR occasionally answers an upload with a transient "500 Internal Server Error": retry a few times
         run: |
-          podman push ${{ env.IMAGE }}:ros2-${{ matrix.distro }}
-          podman push ${{ env.LEGACY_IMAGE }}:ros2-${{ matrix.distro }}
+          push_with_retry() {
+            for attempt in 1 2 3; do
+              podman push "$1" && return 0
+              echo "Push of $1 failed (attempt $attempt/3), retrying in 30 s..."
+              sleep 30
+            done
+            return 1
+          }
+          push_with_retry ${{ env.IMAGE }}:ros2-${{ matrix.distro }}
+          push_with_retry ${{ env.LEGACY_IMAGE }}:ros2-${{ matrix.distro }}

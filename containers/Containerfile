@@ -5,6 +5,7 @@
 # (no user is created in the image: distrobox creates it, or use docker run --user, see the documentation):
 #   podman build --build-arg ROS_DISTRO=<humble|jazzy|kilted|lyrical|rolling> -f containers/Containerfile -t crospi-betfsm:ros2-<distro> .
 #   docker build --build-arg ROS_DISTRO=<humble|jazzy|kilted|lyrical|rolling> -f containers/Containerfile -t crospi-betfsm:ros2-<distro> .
+# Optionally --build-arg CROSPI_REF=<branch|tag|commit> builds another version of crospi than main.
 #
 # The build dependencies of the crospi packages are declared in their package.xml files and installed by rosdep.
 # This file only adds what rosdep cannot install (Lua rocks, pip-only python packages) and the user tools.
@@ -35,9 +36,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Lua rocks used by the task specifications. lrexlib-pcre (dependency of jsonschema) needs PCRE 1 (pcre.h):
-#    from libpcre3-dev where available, built from source otherwise (libpcre3 was dropped in Ubuntu 26.04)
+#    from libpcre3-dev where it has an installation candidate, built from source otherwise (libpcre3 was dropped in
+#    Ubuntu 26.04, where libpcre3-dev is only referenced by other packages: apt-cache show still succeeds for it)
 RUN apt-get update \
-    && if apt-cache show libpcre3-dev > /dev/null 2>&1; then \
+    && if apt-cache policy libpcre3-dev | grep -Eq 'Candidate: [0-9]'; then \
          apt-get install -y libpcre3-dev && luarocks install lrexlib-pcre; \
        else \
          cd /tmp && wget https://sourceforge.net/projects/pcre/files/pcre/8.45/pcre-8.45.tar.gz \
@@ -74,7 +76,15 @@ ENV BASE_WS=/opt/ros2_crospi_ws
 RUN mkdir -p $BASE_WS/src
 WORKDIR $BASE_WS
 
-RUN git clone --recursive https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+# CROSPI_REF: branch, tag or commit of crospi to build (default: main). The CI passes the commit being tested.
+ARG CROSPI_REF=main
+RUN git clone https://github.com/Robotics-Research-Group-KUL/crospi.git src/crospi \
+    && cd src/crospi \
+    && git fetch origin "${CROSPI_REF}" \
+    && git checkout --detach FETCH_HEAD \
+    && git submodule update --init --recursive \
+    && echo "crospi ${CROSPI_REF}: $(git rev-parse HEAD)" \
+    && cd $BASE_WS \
     && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
 
 # Install the dependencies declared in the package.xml files and build.
