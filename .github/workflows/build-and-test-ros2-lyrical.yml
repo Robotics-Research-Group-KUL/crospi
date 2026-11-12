@@ -1,0 +1,32 @@
+name: Build and Test (lyrical)
+
+# Only the triggers and the distribution are defined here; the build steps are in build-and-test-reusable.yml.
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'images/**'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '.gitignore'
+      - 'containers/**'
+      - '.github/workflows/container-images.yml'
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [created, published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_and_test:
+    uses: ./.github/workflows/build-and-test-reusable.yml
+    with:
+      distro: lyrical

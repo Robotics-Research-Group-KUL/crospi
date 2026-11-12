@@ -1,44 +1,30 @@
-name: Build and Test
+name: Build and Test (reusable)
 
-# Builds the crospi packages for every supported ROS 2 distribution in the official ros:<distro>-ros-base image.
+# Builds the crospi packages for one ROS 2 distribution in the official ros:<distro>-ros-base image.
 # All build dependencies are declared in the package.xml files and installed by rosdep (through action-ros-ci),
 # so no custom build image is needed.
+#
+# Called by one small workflow per distribution (build-and-test-ros2-<distro>.yml), so that every distribution has
+# its own status badge (GitHub badges are per workflow, not per matrix job). To support a new distribution, copy one
+# of those files and change the distribution name; the build steps are only defined here.
 
 on:
-  push:
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'images/**'
-      - '**/*.png'
-      - '**/*.jpg'
-      - '.gitignore'
-      - 'containers/**'
-      - '.github/workflows/container-images.yml'
-  pull_request:
-  workflow_dispatch:
-  release:
-    types: [created, published]
+  workflow_call:
+    inputs:
+      distro:
+        description: ROS 2 distribution to build for (e.g. jazzy)
+        required: true
+        type: string
 
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build_and_test:
-    name: ROS 2 ${{ matrix.distro }}
+    name: ROS 2 ${{ inputs.distro }}
     runs-on: ubuntu-latest
     container:
-      image: ros:${{ matrix.distro }}-ros-base
-    strategy:
-      fail-fast: false
-      matrix:
-        distro: [humble, jazzy, kilted, lyrical, rolling]
-    # Rolling changes continuously: report its failures without failing the workflow
-    continue-on-error: ${{ matrix.distro == 'rolling' }}
+      image: ros:${{ inputs.distro }}-ros-base
 
     steps:
       - name: Install build tools and refresh the package indexes
@@ -46,10 +32,10 @@ jobs:
         run: |
           apt-get update
           apt-get install -y ros-dev-tools
-          rosdep update --rosdistro ${{ matrix.distro }}
+          rosdep update --rosdistro ${{ inputs.distro }}
 
       - name: Checkout repository with submodules
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -61,6 +47,6 @@ jobs:
         uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: etasl_wrapper crospi_interfaces crospi_core crospi_default_plugins template_driver_crospi
-          target-ros2-distro: ${{ matrix.distro }}
+          target-ros2-distro: ${{ inputs.distro }}
           skip-tests: true
           coverage-result: false

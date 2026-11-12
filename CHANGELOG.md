@@ -131,6 +131,12 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
     only at build time.
   - **Behaviour change:** pull requests only build the images; they are pushed only from `main` and
     releases (before, every pull request overwrote the published images).
+- `README.md`: per-distro build badges kept (same workflow file names), plus a badge for `container-images.yml`
+  (uncommitted).
+- GitHub Actions updated to their Node.js 24 versions (Node.js 20 is deprecated on the runners)
+  (uncommitted): `actions/checkout` v4 → v7 (all workflows), `actions/upload-pages-artifact` v3 → v5 and
+  `actions/deploy-pages` v4 → v5 (API documentation). `upload-pages-artifact` no longer includes dotfiles in the
+  artifact by default, which the API documentation site does not need.
 - **The images contain the tested commit** (uncommitted): new build argument `CROSPI_REF` (branch, tag or full
   commit hash, default `main`); `container-images.yml` passes the commit that triggered the workflow (the head of
   a pull request), so pull requests test their own code instead of `main`.
@@ -142,12 +148,13 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
 - **Fixed:** the user container builds failed in `rosdep install` because `crospi_core` and
   `crospi_default_plugins` declared the non-existent rosdep keys `python-jsonref-pip` and
   `python-jsonschema-pip` (see their entries).
-- **CI uses standard images** (uncommitted): the six `build-and-test-ros2-<distro>.yml` workflows were
-  replaced by one matrix workflow, `.github/workflows/build-and-test.yml`, that builds `etasl_wrapper`,
-  `crospi_interfaces`, `crospi_core`, `crospi_default_plugins` and (new) `template_driver_crospi` in the
-  official `ros:<distro>-ros-base` image for Humble, Jazzy, Kilted, Lyrical and Rolling (Rolling may fail
-  without failing the workflow); all build dependencies come from rosdep. The end-of-life Iron is no longer
-  built.
+- **CI uses standard images** (uncommitted): the build steps of the six `build-and-test-ros2-<distro>.yml`
+  workflows were moved into one reusable workflow, `.github/workflows/build-and-test-reusable.yml`, that builds
+  `etasl_wrapper`, `crospi_interfaces`, `crospi_core`, `crospi_default_plugins` and (new) `template_driver_crospi`
+  in the official `ros:<distro>-ros-base` image; all build dependencies come from rosdep. The
+  `build-and-test-ros2-<distro>.yml` workflows (Humble, Jazzy, Kilted, Lyrical, Rolling) are now ~30-line callers
+  (triggers + distribution only), kept as separate workflows so that every distribution has its own README badge.
+  The end-of-life Iron is no longer built.
 - Removed: the custom build images `.docker/build_test/*/Dockerfile` and the six
   `docker-push-ros2-<distro>.yml` workflows that built and pushed them weekly
   (`ghcr.io/robotics-research-group-kul/crospi-build-test`), only needed for Boost 1.89.
