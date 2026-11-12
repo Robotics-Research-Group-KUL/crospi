@@ -8,7 +8,6 @@ Supports only ROS2 humble and later versions
 
 
 [![Humble Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-humble.yml?branch=main)
-[![Iron Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-iron.yml?branch=main)
 [![Jazzy Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-jazzy.yml?branch=main)
 [![Kilted Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-kilted.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-kilted.yml?branch=main)
 [![Rolling Build](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-rolling.yml/badge.svg?branch=main)](https://github.com/Robotics-Research-Group-KUL/crospi/actions/workflows/build-and-test-ros2-rolling.yml?branch=main)
@@ -31,6 +30,27 @@ Ready to get started? Our [documentation website](https://rob.pages.gitlab.kuleu
 - **Glossary** — definitions of all key terms.
 
 Whether you are writing your first eTaSL task specification or building a multi-skill robotic application, the documentation walks you through every layer of the Crospi stack.
+
+
+## Using the containers
+
+Ready-to-use container images with Crospi and BetFSM (built in `/opt/ros2_crospi_ws`, with all dependencies) are available for ROS 2 humble, jazzy, kilted, lyrical and rolling:
+
+```
+ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-<distribution>
+```
+
+They work with both Podman and Docker. The recommended way is [Distrobox](https://distrobox.it/), which runs the container with your own user and home directory (GUIs work out of the box):
+
+```bash
+sudo apt install podman distrobox   # or Docker instead of Podman
+distrobox create --name crospi-betfsm-lyrical --pull --image ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-lyrical
+distrobox enter crospi-betfsm-lyrical
+```
+
+Plain containers work as well, e.g. `docker run -it --rm --network host --ipc host ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-lyrical`. See the [container images tutorial](https://rob.pages.gitlab.kuleuven.be/crospi/markdown/installation/docker/) for Nvidia GPUs, GUIs, working on files of your computer and building the images yourself ([`containers/Containerfile`](containers/Containerfile)).
+
+The image was previously called `crospi-betfsm-podman`; that name is still updated for a transition period.
 
 
 ## Citation

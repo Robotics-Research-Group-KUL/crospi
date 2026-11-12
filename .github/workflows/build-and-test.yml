@@ -1,0 +1,66 @@
+name: Build and Test
+
+# Builds the crospi packages for every supported ROS 2 distribution in the official ros:<distro>-ros-base image.
+# All build dependencies are declared in the package.xml files and installed by rosdep (through action-ros-ci),
+# so no custom build image is needed.
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'images/**'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '.gitignore'
+      - 'containers/**'
+      - '.github/workflows/container-images.yml'
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [created, published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_and_test:
+    name: ROS 2 ${{ matrix.distro }}
+    runs-on: ubuntu-latest
+    container:
+      image: ros:${{ matrix.distro }}-ros-base
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [humble, jazzy, kilted, lyrical, rolling]
+    # Rolling changes continuously: report its failures without failing the workflow
+    continue-on-error: ${{ matrix.distro == 'rolling' }}
+
+    steps:
+      - name: Install build tools and refresh the package indexes
+        # The official ROS images ship without apt lists; action-ros-ci does not refresh them nor the rosdep cache
+        run: |
+          apt-get update
+          apt-get install -y ros-dev-tools
+          rosdep update --rosdistro ${{ matrix.distro }}
+
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure GitHub token for HTTPS cloning
+        run: |
+          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+      - name: Build and Test
+        uses: ros-tooling/action-ros-ci@v0.4
+        with:
+          package-name: etasl_wrapper crospi_interfaces crospi_core crospi_default_plugins template_driver_crospi
+          target-ros2-distro: ${{ matrix.distro }}
+          skip-tests: true
+          coverage-result: false

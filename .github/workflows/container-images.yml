@@ -1,0 +1,68 @@
+name: Container images - Build & Push
+
+# Builds the crospi user container (containers/Containerfile) for every ROS 2 distribution with podman and pushes it
+# to ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-<distro>. The images work with podman and docker.
+# Pull requests only build the images (to test them); pushes to main and releases also push them.
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - '.gitignore'
+  pull_request:
+  release:
+    types: [created, published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/robotics-research-group-kul/crospi-betfsm
+  # Previous name of the image (before it was renamed because it is not specific to podman). Still pushed during a
+  # transition period so that existing containers keep receiving updates. Remove after the first release.
+  LEGACY_IMAGE: ghcr.io/robotics-research-group-kul/crospi-betfsm-podman
+
+jobs:
+  build-and-push:
+    name: ROS 2 ${{ matrix.distro }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [humble, jazzy, kilted, lyrical, rolling]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install podman
+
+      - name: Build image
+        run: |
+          podman build --no-cache \
+            --build-arg ROS_DISTRO=${{ matrix.distro }} \
+            -f containers/Containerfile \
+            -t ${{ env.IMAGE }}:ros2-${{ matrix.distro }} \
+            -t ${{ env.LEGACY_IMAGE }}:ros2-${{ matrix.distro }} \
+            .
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        if: github.event_name != 'pull_request'
+        run: |
+          podman push ${{ env.IMAGE }}:ros2-${{ matrix.distro }}
+          podman push ${{ env.LEGACY_IMAGE }}:ros2-${{ matrix.distro }}
