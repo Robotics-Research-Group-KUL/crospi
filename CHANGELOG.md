@@ -144,7 +144,9 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
   artifact by default, which the API documentation site does not need.
 - **mujoco_robotsimulator_crospi in CI and containers** (uncommitted): the build-and-test workflows also build
   [mujoco_robotsimulator_crospi](https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi)
-  (`main`, listed in the new `.github/ci.repos`), and the container images include it
+  (`main`, listed in the new `.github/ci.repos`, imported as `external/mujoco_robotsimulator`: action-ros-ci deletes
+  imported repositories whose path ends with "crospi", the name of the repository under test), and the container
+  images include it
   (`/opt/ros2_crospi_ws/src/mujoco_robotsimulator_crospi`). MuJoCo is installed with pip, pinned to 3.16.0
   (`MUJOCO_VERSION`; MuJoCo 4 requires Python >= 3.11, i.e. not Ubuntu 22.04/Humble).
 - **The images contain the tested commit** (uncommitted): new build argument `CROSPI_REF` (branch, tag or full

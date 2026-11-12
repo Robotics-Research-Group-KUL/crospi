@@ -1,6 +1,11 @@
 # Additional repositories built by the CI (build-and-test-reusable.yml), next to this repository.
+#
+# The directory names must NOT end with "crospi" (the name of this repository): action-ros-ci removes every imported
+# repository whose path ends with the name of the repository under test (it uses an unanchored grep "crospi$"), so a
+# directory called e.g. "mujoco_robotsimulator_crospi" would be deleted right after being imported. colcon finds the
+# packages by their package.xml, so the directory name does not matter otherwise.
 repositories:
-  mujoco_robotsimulator_crospi:
+  external/mujoco_robotsimulator:
     type: git
     url: https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi.git
     version: main
