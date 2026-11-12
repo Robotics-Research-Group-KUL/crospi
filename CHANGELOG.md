@@ -96,6 +96,11 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
   variadic-`fmt` constructor note put back (`63e3be4`).
 
 #### Fixed
+- **GitLab mirror workflow** (`.github/workflows/gitlab-mirror.yml`, uncommitted): it always failed with
+  `rejected main -> main (stale info)`, because `--force-with-lease` compares with the remote-tracking branch of the
+  freshly added `gitlab` remote, which never exists in the CI checkout. Now pushes with `--force` (GitHub is the
+  source of truth), mirrors all branches (`refs/remotes/origin/*`; `--all` only pushed the one checked-out branch)
+  and tags, also runs on tag pushes and manually, and queues runs so that pushes happen in order.
 - **Build on ROS 2 Rolling** (uncommitted): ament_index_cpp 1.14.1 removed `get_package_share_directory.hpp`
   and the string returning `get_package_prefix()`. New header `include/crospi_utils/ament_index.hpp` with
   `etasl::get_package_share_directory()` / `etasl::get_package_prefix()`, which use the std::filesystem API where
