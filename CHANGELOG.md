@@ -137,6 +137,11 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
   (uncommitted): `actions/checkout` v4 → v7 (all workflows), `actions/upload-pages-artifact` v3 → v5 and
   `actions/deploy-pages` v4 → v5 (API documentation). `upload-pages-artifact` no longer includes dotfiles in the
   artifact by default, which the API documentation site does not need.
+- **mujoco_robotsimulator_crospi in CI and containers** (uncommitted): the build-and-test workflows also build
+  [mujoco_robotsimulator_crospi](https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi)
+  (`main`, listed in the new `.github/ci.repos`), and the container images include it
+  (`/opt/ros2_crospi_ws/src/mujoco_robotsimulator_crospi`). MuJoCo is installed with pip, pinned to 3.16.0
+  (`MUJOCO_VERSION`; MuJoCo 4 requires Python >= 3.11, i.e. not Ubuntu 22.04/Humble).
 - **The images contain the tested commit** (uncommitted): new build argument `CROSPI_REF` (branch, tag or full
   commit hash, default `main`); `container-images.yml` passes the commit that triggered the workflow (the head of
   a pull request), so pull requests test their own code instead of `main`.

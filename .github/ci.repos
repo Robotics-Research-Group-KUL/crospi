@@ -1,0 +1,6 @@
+# Additional repositories built by the CI (build-and-test-reusable.yml), next to this repository.
+repositories:
+  mujoco_robotsimulator_crospi:
+    type: git
+    url: https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi.git
+    version: main

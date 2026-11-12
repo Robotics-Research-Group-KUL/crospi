@@ -35,7 +35,7 @@ Whether you are writing your first eTaSL task specification or building a multi-
 
 ## Using the containers
 
-Ready-to-use container images with Crospi and BetFSM (built in `/opt/ros2_crospi_ws`, with all dependencies) are available for ROS 2 humble, jazzy, kilted, lyrical and rolling:
+Ready-to-use container images with Crospi, BetFSM and the [MuJoCo simulator plugin](https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi) (built in `/opt/ros2_crospi_ws`, with all dependencies) are available for ROS 2 humble, jazzy, kilted, lyrical and rolling:
 
 ```
 ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-<distribution>

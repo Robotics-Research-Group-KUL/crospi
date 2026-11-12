@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 #
-# Crospi user container (crospi + betfsm built in /opt/ros2_crospi_ws), for every supported ROS 2 distribution.
+# Crospi user container (crospi, betfsm and mujoco_robotsimulator_crospi built in /opt/ros2_crospi_ws), for every supported ROS 2 distribution.
 # Published as ghcr.io/robotics-research-group-kul/crospi-betfsm:ros2-<distro>. It works with podman and docker
 # (no user is created in the image: distrobox creates it, or use docker run --user, see the documentation):
 #   podman build --build-arg ROS_DISTRO=<humble|jazzy|kilted|lyrical|rolling> -f containers/Containerfile -t crospi-betfsm:ros2-<distro> .
@@ -59,6 +59,10 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd
 #    rule and is always installed with pip. Up to Ubuntu 24.04 the others are installed with pip (recent versions);
 #    from Ubuntu 26.04 on, they are taken from apt where possible.
 #    --ignore-installed prevents pip from trying to uninstall packages that were installed via apt (e.g. typing-extensions)
+#    MuJoCo (for mujoco_robotsimulator_crospi) is installed with pip: its python package ships the headers and
+#    libmujoco.so. Keep in sync with MUJOCO_VERSION in .github/workflows/build-and-test-reusable.yml.
+ARG MUJOCO_VERSION=3.16.0
+RUN pip3 install --no-cache-dir --ignore-installed "mujoco==${MUJOCO_VERSION}"
 RUN . /etc/os-release \
     && if dpkg --compare-versions "$VERSION_ID" ge 26.04; then \
          apt-get update \
@@ -85,7 +89,8 @@ RUN git clone https://github.com/Robotics-Research-Group-KUL/crospi.git src/cros
     && git submodule update --init --recursive \
     && echo "crospi ${CROSPI_REF}: $(git rev-parse HEAD)" \
     && cd $BASE_WS \
-    && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm
+    && git clone --recursive https://github.com/Robotics-Research-Group-KUL/betfsm.git src/betfsm \
+    && git clone --recursive https://github.com/Robotics-Research-Group-KUL/mujoco_robotsimulator_crospi.git src/mujoco_robotsimulator_crospi
 
 # Install the dependencies declared in the package.xml files and build.
 RUN /bin/bash -c '\

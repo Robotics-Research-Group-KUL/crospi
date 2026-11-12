@@ -19,6 +19,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # MuJoCo for mujoco_robotsimulator_crospi (no rosdep key): its python package ships the headers and libmujoco.so.
+  # Keep in sync with MUJOCO_VERSION in containers/Containerfile. (MuJoCo 4 dropped Python 3.10, i.e. Ubuntu 22.04.)
+  MUJOCO_VERSION: "3.16.0"
+  # Build-time only: pip >= 23 refuses system-wide installs on Ubuntu >= 24.04 without this; older pip ignores it
+  PIP_BREAK_SYSTEM_PACKAGES: "1"
+
 jobs:
   build_and_test:
     name: ROS 2 ${{ inputs.distro }}
@@ -31,8 +38,11 @@ jobs:
         # The official ROS images ship without apt lists; action-ros-ci does not refresh them nor the rosdep cache
         run: |
           apt-get update
-          apt-get install -y ros-dev-tools
+          apt-get install -y ros-dev-tools python3-pip
           rosdep update --rosdistro ${{ inputs.distro }}
+
+      - name: Install MuJoCo
+        run: pip3 install "mujoco==${MUJOCO_VERSION}"
 
       - name: Checkout repository with submodules
         uses: actions/checkout@v7
@@ -46,7 +56,9 @@ jobs:
       - name: Build and Test
         uses: ros-tooling/action-ros-ci@v0.4
         with:
-          package-name: etasl_wrapper crospi_interfaces crospi_core crospi_default_plugins template_driver_crospi
+          package-name: etasl_wrapper crospi_interfaces crospi_core crospi_default_plugins template_driver_crospi mujoco_robotsimulator_crospi
+          # Additional repositories (e.g. mujoco_robotsimulator_crospi) cloned into the workspace
+          vcs-repo-file-url: .github/ci.repos
           target-ros2-distro: ${{ inputs.distro }}
           skip-tests: true
           coverage-result: false
