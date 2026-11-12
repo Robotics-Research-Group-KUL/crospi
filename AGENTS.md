@@ -180,5 +180,7 @@ typedef crospi_boost::lockfree::spsc_value<robotdrivers::DynamicJointDataField> 
 
 11. **Vendored Boost is generated, never edit it by hand** — `crospi_core/include/crospi_boost/` is produced by `crospi_core/tools/vendor_boost/vendor_boost.py <boost_include_dir> crospi_core/include` (source version in `crospi_boost/VENDORED_FROM.txt`). To update it, rerun the script with a newer Boost and rebuild all packages. Never include `<boost/lockfree/spsc_value.hpp>` or add `find_package(Boost 1.89 ...)` again.
 
-12. **Several folders are nested submodule** — E.g. `etasl_wrapper`, `crospi_core`, `crospi_default_plugins`, `crospi_interfaces`, are git submodules that contains their own submodules. Initialize with `git submodule update --init --recursive`.
+12. **ROS 2 API differences between distros** — Code must compile on every distro from Humble to Rolling; CI builds all of them. Known cases: use `etasl::get_package_share_directory()` / `etasl::get_package_prefix()` (`crospi_utils/ament_index.hpp`) instead of `ament_index_cpp::get_package_share_directory()` (removed in Rolling) or `get_package_share_path()` (not in Humble); `LifecycleNode::get_fully_qualified_name()` does not exist in Humble (use `get_namespace()` + `get_name()`). Check the API of a new ROS function on the oldest (humble) and newest (rolling) branches before using it.
+
+13. **Several folders are nested submodule** — E.g. `etasl_wrapper`, `crospi_core`, `crospi_default_plugins`, `crospi_interfaces`, are git submodules that contains their own submodules. Initialize with `git submodule update --init --recursive`.
 

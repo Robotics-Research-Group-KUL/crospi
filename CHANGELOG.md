@@ -96,6 +96,14 @@ Changes with respect to meta-repo commit `4d02361` ("Improved readme file", 2026
   variadic-`fmt` constructor note put back (`63e3be4`).
 
 #### Fixed
+- **Build on ROS 2 Rolling** (uncommitted): ament_index_cpp 1.14.1 removed `get_package_share_directory.hpp`
+  and the string returning `get_package_prefix()`. New header `include/crospi_utils/ament_index.hpp` with
+  `etasl::get_package_share_directory()` / `etasl::get_package_prefix()`, which use the std::filesystem API where
+  available (Jazzy and later) and the string API on Humble; used in `string_interpolate.cpp` (unused include
+  removed from `crospi_node.cpp`). Plugins can use it as well.
+- **Build on ROS 2 Humble** (uncommitted): `etasl::node_scoped_topic()` used
+  `LifecycleNode::get_fully_qualified_name()`, which does not exist in Humble; the name is now built from
+  `get_namespace()` and `get_name()` (same result, verified for root and nested namespaces).
 - Binaries no longer load two Boost.Chrono libraries (1.89 from `/opt/boost_1.89.0` and the
   system 1.83 through eTaSL) in the same process; only the system Boost is linked now.
 
